@@ -1,7 +1,11 @@
 package by.voiteshonok.valacugi.ui.trips
 
 import androidx.compose.foundation.border
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -12,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -26,16 +31,19 @@ import by.voiteshonok.valacugi.domain.Trip
 fun TripsScreen(
     modifier: Modifier = Modifier,
     onOpenAtlas: (String) -> Unit,
+    onOpenTripConstructor: () -> Unit,
     viewModelFactory: ViewModelProvider.Factory
 ) {
     val viewModel: TripsViewModel = viewModel(factory = viewModelFactory)
     val uiState: TripsUiState by viewModel.uiState.collectAsStateWithLifecycle()
     Column(modifier = modifier.fillMaxSize()) {
-        Column(
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .border(width = 1.dp, color = MaterialTheme.colorScheme.primary)
-                .padding(horizontal = 16.dp, vertical = 20.dp)
+                .padding(horizontal = 16.dp, vertical = 12.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
                 text = uiState.title,
@@ -43,6 +51,20 @@ fun TripsScreen(
                     fontFamily = FontFamily.SansSerif,
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 24.sp,
+                    letterSpacing = 1.sp,
+                    color = MaterialTheme.colorScheme.primary
+                )
+            )
+            Text(
+                text = "ADD",
+                modifier = Modifier
+                    .border(width = 1.dp, color = MaterialTheme.colorScheme.primary)
+                    .clickable(onClick = onOpenTripConstructor)
+                    .padding(horizontal = 14.dp, vertical = 10.dp),
+                style = TextStyle(
+                    fontFamily = FontFamily.Monospace,
+                    fontWeight = FontWeight.Medium,
+                    fontSize = 14.sp,
                     letterSpacing = 1.sp,
                     color = MaterialTheme.colorScheme.primary
                 )

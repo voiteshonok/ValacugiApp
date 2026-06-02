@@ -9,6 +9,7 @@ object AppRoutes {
     const val Identity: String = "identity"
     const val Atlas: String = "atlas/{tripId}"
     const val Transmission: String = "transmission/{threadId}"
+    const val TripConstructor: String = "trip_constructor"
 }
 
 object AppRouteArguments {

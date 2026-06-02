@@ -3,14 +3,20 @@ package by.voiteshonok.valacugi.core.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import by.voiteshonok.valacugi.access.AccessScreen
 import by.voiteshonok.valacugi.core.di.AppContainer
 import by.voiteshonok.valacugi.core.session.UserSession
+import by.voiteshonok.valacugi.domain.GetTripDetails
+import by.voiteshonok.valacugi.ui.atlas.TripDetailsScreen
+import by.voiteshonok.valacugi.ui.atlas.TripDetailsViewModelFactory
 import by.voiteshonok.valacugi.ui.boot.BootScreen
 import by.voiteshonok.valacugi.ui.shell.ShellScreen
+import by.voiteshonok.valacugi.ui.trips.TripConstructorScreen
 
 @Composable
 fun AppNavHost(
@@ -65,6 +71,23 @@ fun AppNavHost(
                     }
                 }
             )
+        }
+        composable(
+            route = AppRoutes.Atlas,
+            arguments = listOf(
+                navArgument(AppRouteArguments.TripId) { type = NavType.StringType }
+            )
+        ) { backStackEntry ->
+            val tripId: String = backStackEntry.arguments?.getString(AppRouteArguments.TripId).orEmpty()
+            TripDetailsScreen(
+                viewModelFactory = TripDetailsViewModelFactory(
+                    tripId = tripId,
+                    getTripDetails = GetTripDetails(tripsRepository = appContainer.tripsRepository)
+                )
+            )
+        }
+        composable(route = AppRoutes.TripConstructor) {
+            TripConstructorScreen()
         }
     }
 }
