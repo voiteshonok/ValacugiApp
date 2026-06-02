@@ -41,8 +41,11 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import by.voiteshonok.valacugi.ui.theme.AtlasError
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+
+private const val InvalidCredentialsMessage: String = "WRONG LOGIN / PASSWORD"
 
 @Composable
 fun AccessScreen(
@@ -52,6 +55,7 @@ fun AccessScreen(
     var identification: String by remember { mutableStateOf("") }
     var credential: String by remember { mutableStateOf("") }
     var isAuthenticating: Boolean by remember { mutableStateOf(false) }
+    var errorMessage: String? by remember { mutableStateOf(null) }
     val coroutineScope = rememberCoroutineScope()
     Surface(
         modifier = modifier.fillMaxSize(),
@@ -104,7 +108,10 @@ fun AccessScreen(
                     placeholder = "USER@DOMAIN.COM",
                     value = identification,
                     keyboardType = KeyboardType.Email,
-                    onValueChange = { nextValue: String -> identification = nextValue }
+                    onValueChange = { nextValue: String ->
+                        identification = nextValue
+                        errorMessage = null
+                    }
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 AtlasField(
@@ -113,8 +120,24 @@ fun AccessScreen(
                     value = credential,
                     keyboardType = KeyboardType.Password,
                     visualTransformation = PasswordVisualTransformation(),
-                    onValueChange = { nextValue: String -> credential = nextValue }
+                    onValueChange = { nextValue: String ->
+                        credential = nextValue
+                        errorMessage = null
+                    }
                 )
+                if (errorMessage != null) {
+                    Spacer(modifier = Modifier.height(12.dp))
+                    Text(
+                        text = errorMessage!!,
+                        style = TextStyle(
+                            fontFamily = FontFamily.Monospace,
+                            fontWeight = FontWeight.Medium,
+                            fontSize = 12.sp,
+                            letterSpacing = 0.5.sp,
+                            color = AtlasError
+                        )
+                    )
+                }
                 Spacer(modifier = Modifier.height(32.dp))
                 Button(
                     modifier = Modifier
@@ -126,6 +149,7 @@ fun AccessScreen(
                         contentColor = MaterialTheme.colorScheme.onPrimary
                     ),
                     contentPadding = PaddingValues(horizontal = 16.dp, vertical = 0.dp),
+                    enabled = !isAuthenticating,
                     onClick = {
                         if (isAuthenticating) return@Button
                         val credentials = AccessCredentials(
@@ -133,8 +157,18 @@ fun AccessScreen(
                             credential = credential
                         )
                         isAuthenticating = true
+                        errorMessage = null
                         coroutineScope.launch {
                             delay(900L)
+                            if (!AccessCredentialsValidator.isValid(
+                                    identification = credentials.identification,
+                                    credential = credentials.credential
+                                )
+                            ) {
+                                errorMessage = InvalidCredentialsMessage
+                                isAuthenticating = false
+                                return@launch
+                            }
                             onContinue(credentials)
                             isAuthenticating = false
                         }

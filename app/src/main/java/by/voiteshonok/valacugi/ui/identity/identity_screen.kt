@@ -41,7 +41,7 @@ fun IdentityScreen(
             )
         )
         Text(
-            text = "Placeholder screen. Next: session + toggles + logout flow.",
+            text = "Session cleared on logout. Relaunch skips shell until login.",
             style = TextStyle(
                 fontFamily = FontFamily.Monospace,
                 fontWeight = FontWeight.Normal,

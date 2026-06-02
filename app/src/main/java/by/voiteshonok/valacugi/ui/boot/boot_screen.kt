@@ -2,10 +2,10 @@ package by.voiteshonok.valacugi.ui.boot
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import by.voiteshonok.valacugi.core.session.SessionRepository
+import by.voiteshonok.valacugi.core.session.UserSession
+import kotlinx.coroutines.flow.first
 
 @Composable
 fun BootScreen(
@@ -14,8 +14,8 @@ fun BootScreen(
     onNavigateToAccess: () -> Unit,
     onNavigateToShell: () -> Unit
 ) {
-    val session by sessionRepository.observeSession().collectAsState(initial = null)
-    LaunchedEffect(session) {
+    LaunchedEffect(sessionRepository) {
+        val session: UserSession? = sessionRepository.observeSession().first()
         if (session == null) {
             onNavigateToAccess()
             return@LaunchedEffect
@@ -23,4 +23,3 @@ fun BootScreen(
         onNavigateToShell()
     }
 }
-

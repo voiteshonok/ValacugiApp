@@ -54,7 +54,16 @@ fun AppNavHost(
             )
         }
         composable(route = AppRoutes.Shell) {
-            ShellScreen(rootNavController = navController)
+            ShellScreen(
+                rootNavController = navController,
+                onLogout = {
+                    appContainer.sessionRepository.clearSession()
+                    navController.navigate(AppRoutes.Access) {
+                        popUpTo(AppRoutes.Shell) { inclusive = true }
+                        launchSingleTop = true
+                    }
+                }
+            )
         }
     }
 }

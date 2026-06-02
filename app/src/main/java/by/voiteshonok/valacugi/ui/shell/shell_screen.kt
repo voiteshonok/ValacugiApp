@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
@@ -30,13 +31,16 @@ import by.voiteshonok.valacugi.core.navigation.AppRoutes
 import by.voiteshonok.valacugi.ui.directory.DirectoryScreen
 import by.voiteshonok.valacugi.ui.identity.IdentityScreen
 import by.voiteshonok.valacugi.ui.trips.TripsScreen
+import kotlinx.coroutines.launch
 
 @Composable
 fun ShellScreen(
     modifier: Modifier = Modifier,
-    rootNavController: NavHostController
+    rootNavController: NavHostController,
+    onLogout: suspend () -> Unit
 ) {
     val shellNavController: NavHostController = rememberNavController()
+    val coroutineScope = rememberCoroutineScope()
     val navBackStackEntry = shellNavController.currentBackStackEntryAsState().value
     val currentRoute: String? = navBackStackEntry?.destination?.route
     Scaffold(
@@ -90,9 +94,8 @@ fun ShellScreen(
             }
             composable(route = AppRoutes.Identity) {
                 IdentityScreen(onLogout = {
-                    rootNavController.navigate(AppRoutes.Access) {
-                        popUpTo(AppRoutes.Shell) { inclusive = true }
-                        launchSingleTop = true
+                    coroutineScope.launch {
+                        onLogout()
                     }
                 })
             }
