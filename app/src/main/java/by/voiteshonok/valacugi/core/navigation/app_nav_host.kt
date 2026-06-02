@@ -56,6 +56,7 @@ fun AppNavHost(
         composable(route = AppRoutes.Shell) {
             ShellScreen(
                 rootNavController = navController,
+                tripsRepository = appContainer.tripsRepository,
                 onLogout = {
                     appContainer.sessionRepository.clearSession()
                     navController.navigate(AppRoutes.Access) {

@@ -28,15 +28,18 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import by.voiteshonok.valacugi.core.navigation.AppRoutes
+import by.voiteshonok.valacugi.domain.TripsRepository
 import by.voiteshonok.valacugi.ui.directory.DirectoryScreen
 import by.voiteshonok.valacugi.ui.identity.IdentityScreen
 import by.voiteshonok.valacugi.ui.trips.TripsScreen
+import by.voiteshonok.valacugi.ui.trips.TripsViewModelFactory
 import kotlinx.coroutines.launch
 
 @Composable
 fun ShellScreen(
     modifier: Modifier = Modifier,
     rootNavController: NavHostController,
+    tripsRepository: TripsRepository,
     onLogout: suspend () -> Unit
 ) {
     val shellNavController: NavHostController = rememberNavController()
@@ -82,7 +85,8 @@ fun ShellScreen(
                 TripsScreen(
                     onOpenAtlas = { tripId: String ->
                         rootNavController.navigate("atlas/$tripId")
-                    }
+                    },
+                    viewModelFactory = TripsViewModelFactory(tripsRepository = tripsRepository)
                 )
             }
             composable(route = AppRoutes.Directory) {
