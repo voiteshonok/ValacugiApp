@@ -1,0 +1,283 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Valacugi - Active Chats</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Space+Mono:wght@400;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-bright": "#faf9f9",
+                    "primary": "#000000",
+                    "on-background": "#1b1c1c",
+                    "on-error-container": "#93000a",
+                    "on-tertiary-fixed-variant": "#474747",
+                    "secondary-fixed-dim": "#ffb4a4",
+                    "surface-dim": "#dbdad9",
+                    "inverse-on-surface": "#f2f0f0",
+                    "inverse-primary": "#c6c6c6",
+                    "on-error": "#ffffff",
+                    "secondary-fixed": "#ffdad3",
+                    "tertiary-fixed": "#e2e2e2",
+                    "surface-container-lowest": "#ffffff",
+                    "error": "#ba1a1a",
+                    "surface-container": "#efeded",
+                    "on-tertiary-fixed": "#1b1b1b",
+                    "on-primary": "#ffffff",
+                    "on-tertiary": "#ffffff",
+                    "outline-variant": "#cfc4c5",
+                    "on-secondary": "#ffffff",
+                    "on-secondary-fixed": "#3e0500",
+                    "tertiary": "#000000",
+                    "surface-container-high": "#e9e8e8",
+                    "on-secondary-container": "#fffbff",
+                    "primary-fixed": "#e2e2e2",
+                    "primary-container": "#1b1b1b",
+                    "tertiary-container": "#1b1b1b",
+                    "on-surface-variant": "#4c4546",
+                    "background": "#faf9f9",
+                    "error-container": "#ffdad6",
+                    "outline": "#7e7576",
+                    "primary-fixed-dim": "#c6c6c6",
+                    "tertiary-fixed-dim": "#c6c6c6",
+                    "on-primary-container": "#848484",
+                    "surface-container-highest": "#e3e2e2",
+                    "on-secondary-fixed-variant": "#8c1800",
+                    "surface-container-low": "#f5f3f3",
+                    "on-surface": "#1b1c1c",
+                    "secondary": "#b32100",
+                    "surface-tint": "#5e5e5e",
+                    "inverse-surface": "#303031",
+                    "surface-variant": "#e3e2e2",
+                    "on-tertiary-container": "#848484",
+                    "on-primary-fixed-variant": "#474747",
+                    "surface": "#faf9f9",
+                    "on-primary-fixed": "#1b1b1b",
+                    "secondary-container": "#e02c00"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "lg": "32px",
+                    "unit": "16px",
+                    "margin-mobile": "16px",
+                    "md": "16px",
+                    "gutter": "16px",
+                    "sm": "8px",
+                    "xl": "64px",
+                    "xs": "4px",
+                    "margin-desktop": "32px"
+            },
+            "fontFamily": {
+                    "display-lg": [
+                            "Inter"
+                    ],
+                    "headline-lg-mobile": [
+                            "Inter"
+                    ],
+                    "headline-md": [
+                            "Inter"
+                    ],
+                    "headline-lg": [
+                            "Inter"
+                    ],
+                    "data-tabular": [
+                            "Space Mono"
+                    ],
+                    "body-md": [
+                            "Inter"
+                    ],
+                    "label-sm": [
+                            "Inter"
+                    ]
+            },
+            "fontSize": {
+                    "display-lg": [
+                            "48px",
+                            {
+                                    "lineHeight": "1.1",
+                                    "letterSpacing": "-0.03em",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "headline-lg-mobile": [
+                            "24px",
+                            {
+                                    "lineHeight": "1.2",
+                                    "letterSpacing": "-0.02em",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "headline-md": [
+                            "20px",
+                            {
+                                    "lineHeight": "1.2",
+                                    "letterSpacing": "-0.01em",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "headline-lg": [
+                            "32px",
+                            {
+                                    "lineHeight": "1.2",
+                                    "letterSpacing": "-0.02em",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "data-tabular": [
+                            "14px",
+                            {
+                                    "lineHeight": "1.4",
+                                    "letterSpacing": "0em",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "body-md": [
+                            "16px",
+                            {
+                                    "lineHeight": "1.5",
+                                    "letterSpacing": "0em",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "label-sm": [
+                            "12px",
+                            {
+                                    "lineHeight": "1",
+                                    "letterSpacing": "0.05em",
+                                    "fontWeight": "500"
+                            }
+                    ]
+            }
+    },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: theme('colors.surface-bright');
+            color: theme('colors.primary');
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.fill {
+            font-variation-settings: 'FILL' 1;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="antialiased min-h-screen flex flex-col pt-16 pb-16">
+<!-- TopAppBar (Hidden on desktop for this view, active on mobile) -->
+<header class="fixed top-0 w-full z-50 flex justify-between items-center px-md h-16 bg-surface dark:bg-surface-container text-primary dark:text-on-primary-fixed border-b border-primary dark:border-outline md:hidden">
+<button class="w-12 h-12 flex items-center justify-center hover:bg-primary hover:text-on-primary dark:hover:bg-primary-fixed dark:hover:text-on-primary-fixed transition-colors duration-75 active:invert">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+</button>
+<div class="font-data-tabular text-headline-md tracking-tighter text-primary dark:text-on-primary-fixed uppercase">[ VALACUGI ]</div>
+<button class="w-12 h-12 flex items-center justify-center hover:bg-primary hover:text-on-primary dark:hover:bg-primary-fixed dark:hover:text-on-primary-fixed transition-colors duration-75 active:invert">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+</header>
+<!-- Desktop Sidebar (Hidden on mobile) -->
+<aside class="hidden md:flex flex-col w-64 fixed left-0 top-0 h-screen border-r border-primary bg-surface-bright z-40">
+<div class="h-16 border-b border-primary flex items-center px-gutter">
+<div class="font-data-tabular text-headline-md tracking-tighter uppercase">[ ATLAS ]</div>
+</div>
+<nav class="flex-1 flex flex-col py-md">
+<a class="flex items-center px-gutter py-sm hover:bg-surface-container-high transition-colors text-primary font-label-sm uppercase mb-xs" href="#">
+<span class="material-symbols-outlined mr-sm text-lg">calendar_today</span>
+                ITINERARY
+            </a>
+<a class="flex items-center px-gutter py-sm hover:bg-surface-container-high transition-colors text-primary font-label-sm uppercase mb-xs" href="#">
+<span class="material-symbols-outlined mr-sm text-lg">map</span>
+                ATLAS
+            </a>
+<a class="flex items-center px-gutter py-sm bg-primary text-on-primary font-label-sm uppercase mb-xs font-bold" href="#">
+<span class="material-symbols-outlined mr-sm text-lg fill">chat_bubble</span>
+                MESSAGES
+            </a>
+<a class="flex items-center px-gutter py-sm hover:bg-surface-container-high transition-colors text-primary font-label-sm uppercase mb-xs" href="#">
+<span class="material-symbols-outlined mr-sm text-lg">person</span>
+                IDENTITY
+            </a>
+</nav>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 w-full max-w-screen-xl mx-auto md:pl-64 px-margin-mobile md:px-margin-desktop py-lg">
+<div class="mb-lg">
+<h1 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg uppercase mb-xs">Active Dispatch</h1>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-xl">Ongoing communications and status updates for your current and upcoming assignments.</p>
+</div>
+<div class="border-t border-primary">
+<!-- Row 1: LONDON (Unread) -->
+<a class="block group hover:bg-surface-container-high transition-colors border-b border-primary h-[72px] flex items-center px-sm" href="#">
+<div class="w-12 h-12 flex-shrink-0 bg-surface-container flex items-center justify-center border border-primary mr-md">
+<span class="material-symbols-outlined text-outline">flight_takeoff</span>
+</div>
+<div class="flex-1 min-w-0 pr-4">
+<div class="flex items-center justify-between mb-1">
+<h2 class="font-headline-md text-headline-md truncate uppercase tracking-tight">LONDON</h2>
+<div class="flex items-center">
+<!-- Unread Indicator -->
+<div aria-label="Unread message" class="w-2 h-2 bg-secondary mr-sm"></div>
+<span class="font-data-tabular text-data-tabular text-on-surface-variant">14:02</span>
+</div>
+</div>
+<div class="font-body-md text-body-md text-on-surface-variant truncate">
+<span class="font-bold text-primary mr-2">OP:</span>Leaving dates blank for now.
+                    </div>
+</div>
+</a>
+<!-- Row 2: TOKYO (Read) -->
+<a class="block group hover:bg-surface-container-high transition-colors border-b border-primary h-[72px] flex items-center px-sm" href="#">
+<div class="w-12 h-12 flex-shrink-0 bg-surface-container flex items-center justify-center border border-primary mr-md">
+<span class="material-symbols-outlined text-outline">location_city</span>
+</div>
+<div class="flex-1 min-w-0 pr-4">
+<div class="flex items-center justify-between mb-1">
+<h2 class="font-headline-md text-headline-md truncate uppercase tracking-tight text-on-surface-variant">TOKYO</h2>
+<span class="font-data-tabular text-data-tabular text-outline">YESTERDAY</span>
+</div>
+<div class="font-body-md text-body-md text-outline truncate">
+<span class="font-bold mr-2">LOG:</span>Tickets confirmed.
+                    </div>
+</div>
+</a>
+</div>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-stretch h-16 bg-surface dark:bg-surface-container border-t border-primary dark:border-outline md:hidden">
+<a class="flex flex-col items-center justify-center text-primary dark:text-on-tertiary-fixed-variant h-full w-full hover:bg-surface-container-high dark:hover:bg-inverse-surface active:bg-secondary dark:active:bg-secondary-container transition-colors" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="calendar_today">calendar_today</span>
+<span class="font-label-sm text-label-sm uppercase">TRIPS</span>
+</a>
+
+<a class="flex flex-col items-center justify-center bg-primary dark:bg-primary-fixed text-on-primary dark:text-on-primary-fixed h-full w-full active:bg-secondary dark:active:bg-secondary-container transition-colors" href="#">
+<span class="material-symbols-outlined fill mb-1" data-icon="chat_bubble">chat_bubble</span>
+<span class="font-label-sm text-label-sm uppercase font-bold">MESSAGES</span>
+</a>
+<a class="flex flex-col items-center justify-center text-primary dark:text-on-tertiary-fixed-variant h-full w-full hover:bg-surface-container-high dark:hover:bg-inverse-surface active:bg-secondary dark:active:bg-secondary-container transition-colors" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="person">person</span>
+<span class="font-label-sm text-label-sm uppercase">IDENTITY</span>
+</a>
+</nav>
+
+
+
+
+
+
+</body></html>

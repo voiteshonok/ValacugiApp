@@ -1,0 +1,139 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Valacugi - Access</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Space+Mono&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-bright": "#faf9f9",
+                        "primary": "#000000",
+                        "on-background": "#1b1c1c",
+                        "on-error-container": "#93000a",
+                        "on-tertiary-fixed-variant": "#474747",
+                        "secondary-fixed-dim": "#ffb4a4",
+                        "surface-dim": "#dbdad9",
+                        "inverse-on-surface": "#f2f0f0",
+                        "inverse-primary": "#c6c6c6",
+                        "on-error": "#ffffff",
+                        "secondary-fixed": "#ffdad3",
+                        "tertiary-fixed": "#e2e2e2",
+                        "surface-container-lowest": "#ffffff",
+                        "error": "#ba1a1a",
+                        "surface-container": "#efeded",
+                        "on-tertiary-fixed": "#1b1b1b",
+                        "on-primary": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "outline-variant": "#cfc4c5",
+                        "on-secondary": "#ffffff",
+                        "on-secondary-fixed": "#3e0500",
+                        "tertiary": "#000000",
+                        "surface-container-high": "#e9e8e8",
+                        "on-secondary-container": "#fffbff",
+                        "primary-fixed": "#e2e2e2",
+                        "primary-container": "#1b1b1b",
+                        "tertiary-container": "#1b1b1b",
+                        "on-surface-variant": "#4c4546",
+                        "background": "#faf9f9",
+                        "error-container": "#ffdad6",
+                        "outline": "#7e7576",
+                        "primary-fixed-dim": "#c6c6c6",
+                        "tertiary-fixed-dim": "#c6c6c6",
+                        "on-primary-container": "#848484",
+                        "surface-container-highest": "#e3e2e2",
+                        "on-secondary-fixed-variant": "#8c1800",
+                        "surface-container-low": "#f5f3f3",
+                        "on-surface": "#1b1c1c",
+                        "secondary": "#b32100",
+                        "surface-tint": "#5e5e5e",
+                        "inverse-surface": "#303031",
+                        "surface-variant": "#e3e2e2",
+                        "on-tertiary-container": "#848484",
+                        "on-primary-fixed-variant": "#474747",
+                        "surface": "#faf9f9",
+                        "on-primary-fixed": "#1b1b1b",
+                        "secondary-container": "#e02c00"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "lg": "32px",
+                        "unit": "16px",
+                        "margin-mobile": "16px",
+                        "md": "16px",
+                        "gutter": "16px",
+                        "sm": "8px",
+                        "xl": "64px",
+                        "xs": "4px",
+                        "margin-desktop": "32px"
+                    },
+                    "fontFamily": {
+                        "display-lg": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "data-tabular": ["Space Mono"],
+                        "body-md": ["Inter"],
+                        "label-sm": ["Inter"]
+                    },
+                    "fontSize": {
+                        "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.03em", "fontWeight": "600"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                        "headline-md": ["20px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "headline-lg": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                        "data-tabular": ["14px", {"lineHeight": "1.4", "letterSpacing": "0em", "fontWeight": "400"}],
+                        "body-md": ["16px", {"lineHeight": "1.5", "letterSpacing": "0em", "fontWeight": "400"}],
+                        "label-sm": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "500"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        /* Form specific reset for strict bottom-border only style */
+        input[type="email"]:focus {
+            outline: none;
+            box-shadow: none;
+            border-color: #000000;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-surface text-on-surface min-h-screen flex flex-col font-body-md selection:bg-primary selection:text-on-primary">
+<!-- Top Navigation Placeholder (Hidden for transactional/linear intent) -->
+<!-- Suppressed navigation shell due to linear intent (Login/Access screen) -->
+<main class="flex-1 w-full max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop flex flex-col">
+<!-- Header / Logo -->
+<header class="pt-margin-desktop md:pt-xl flex-shrink-0">
+<h1 class="font-data-tabular text-[24px] text-primary tracking-tighter">[&nbsp;<span style="font-size: 20px; font-weight: 600; letter-spacing: -1px; text-transform: uppercase;">VALACUGI</span>&nbsp;]</h1>
+</header>
+<!-- Main Access Area - Vertically stacked with massive top whitespace -->
+<section class="flex-1 flex flex-col justify-center max-w-md mx-auto w-full pt-32 pb-16">
+<div class="mb-lg">
+<h2 class="font-display-lg text-display-lg text-primary mb-md hidden md:block">ACCESS<br>SYSTEM</h2>
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-primary mb-md md:hidden">ACCESS SYSTEM</h2>
+<p class="font-data-tabular text-data-tabular text-on-surface-variant">ENTER CREDENTIALS TO PROCEED</p>
+</div>
+<form action="#" class="flex flex-col gap-lg w-full" method="POST" onsubmit="event.preventDefault(); document.getElementById('login-btn').innerText = 'AUTHENTICATING...'; setTimeout(() =&gt; window.location.href='#', 1500);"><div class="flex flex-col relative group"><label class="font-label-sm text-label-sm uppercase text-on-surface-variant absolute -top-6 left-0 transition-all group-focus-within:text-primary" for="email">IDENTIFICATION</label><input class="h-[56px] w-full bg-transparent border-0 border-b border-primary text-primary font-data-tabular text-data-tabular placeholder:text-outline-variant rounded-none px-0 py-sm transition-colors focus:ring-0" id="email" name="email" placeholder="USER@DOMAIN.COM" required="" type="email"></div><div class="flex flex-col relative group"><label class="font-label-sm text-label-sm uppercase text-on-surface-variant absolute -top-6 left-0 transition-all group-focus-within:text-primary" for="password">CREDENTIAL</label><input class="h-[56px] w-full bg-transparent border-0 border-b border-primary text-primary font-data-tabular text-data-tabular placeholder:text-outline-variant rounded-none px-0 py-sm transition-colors focus:ring-0" id="password" name="password" placeholder="PASSWORD" required="" type="password"></div><button class="h-[56px] w-full bg-primary text-on-primary font-label-sm text-label-sm uppercase tracking-widest rounded-none hover:bg-surface-container-high hover:text-primary transition-colors duration-150 border border-primary flex items-center justify-center gap-sm active:invert" id="login-btn" type="submit">CONTINUE <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">arrow_forward</span></button></form>
+<div class="mt-xl pt-lg border-t border-surface-variant flex flex-col gap-md">
+</div>
+</section>
+</main>
+<!-- Bottom Navigation Placeholder (Hidden for transactional/linear intent) -->
+
+
+</body></html>

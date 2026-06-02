@@ -1,0 +1,241 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Valacugi - Tokyo Trip Atlas</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Space+Mono:wght@400;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-bright": "#faf9f9",
+                    "primary": "#000000",
+                    "on-background": "#1b1c1c",
+                    "on-error-container": "#93000a",
+                    "on-tertiary-fixed-variant": "#474747",
+                    "secondary-fixed-dim": "#ffb4a4",
+                    "surface-dim": "#dbdad9",
+                    "inverse-on-surface": "#f2f0f0",
+                    "inverse-primary": "#c6c6c6",
+                    "on-error": "#ffffff",
+                    "secondary-fixed": "#ffdad3",
+                    "tertiary-fixed": "#e2e2e2",
+                    "surface-container-lowest": "#ffffff",
+                    "error": "#ba1a1a",
+                    "surface-container": "#efeded",
+                    "on-tertiary-fixed": "#1b1b1b",
+                    "on-primary": "#ffffff",
+                    "on-tertiary": "#ffffff",
+                    "outline-variant": "#cfc4c5",
+                    "on-secondary": "#ffffff",
+                    "on-secondary-fixed": "#3e0500",
+                    "tertiary": "#000000",
+                    "surface-container-high": "#e9e8e8",
+                    "on-secondary-container": "#fffbff",
+                    "primary-fixed": "#e2e2e2",
+                    "primary-container": "#1b1b1b",
+                    "tertiary-container": "#1b1b1b",
+                    "on-surface-variant": "#4c4546",
+                    "background": "#faf9f9",
+                    "error-container": "#ffdad6",
+                    "outline": "#7e7576",
+                    "primary-fixed-dim": "#c6c6c6",
+                    "tertiary-fixed-dim": "#c6c6c6",
+                    "on-primary-container": "#848484",
+                    "surface-container-highest": "#e3e2e2",
+                    "on-secondary-fixed-variant": "#8c1800",
+                    "surface-container-low": "#f5f3f3",
+                    "on-surface": "#1b1c1c",
+                    "secondary": "#b32100",
+                    "surface-tint": "#5e5e5e",
+                    "inverse-surface": "#303031",
+                    "surface-variant": "#e3e2e2",
+                    "on-tertiary-container": "#848484",
+                    "on-primary-fixed-variant": "#474747",
+                    "surface": "#faf9f9",
+                    "on-primary-fixed": "#1b1b1b",
+                    "secondary-container": "#e02c00"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "lg": "32px",
+                    "unit": "16px",
+                    "margin-mobile": "16px",
+                    "md": "16px",
+                    "gutter": "16px",
+                    "sm": "8px",
+                    "xl": "64px",
+                    "xs": "4px",
+                    "margin-desktop": "32px"
+            },
+            "fontFamily": {
+                    "display-lg": ["Inter"],
+                    "headline-lg-mobile": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "data-tabular": ["Space Mono"],
+                    "body-md": ["Inter"],
+                    "label-sm": ["Inter"]
+            },
+            "fontSize": {
+                    "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.03em", "fontWeight": "600"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                    "headline-md": ["20px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                    "data-tabular": ["14px", {"lineHeight": "1.4", "letterSpacing": "0em", "fontWeight": "400"}],
+                    "body-md": ["16px", {"lineHeight": "1.5", "letterSpacing": "0em", "fontWeight": "400"}],
+                    "label-sm": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "500"}]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        body {
+            background-color: #faf9f9;
+            color: #1b1c1c;
+            -webkit-font-smoothing: antialiased;
+        }
+        .brutal-border {
+            border: 1px solid #000000;
+        }
+        .brutal-border-b {
+            border-bottom: 1px solid #000000;
+        }
+        .brutal-border-r {
+            border-right: 1px solid #000000;
+        }
+        .brutal-border-t {
+            border-top: 1px solid #000000;
+        }
+        .brutal-border-l {
+            border-left: 1px solid #000000;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="min-h-screen pb-24">
+<!-- TopAppBar -->
+<nav class="fixed top-0 w-full z-50 flex justify-between items-center px-md h-16 bg-surface dark:bg-surface-container border-b border-primary dark:border-outline flat no shadows">
+<div class="flex items-center gap-4 hover:bg-primary hover:text-on-primary dark:hover:bg-primary-fixed dark:hover:text-on-primary-fixed transition-colors duration-75 p-2 cursor-pointer text-primary dark:text-on-primary-fixed">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+</div>
+<div class="font-data-tabular text-headline-md tracking-tighter text-primary dark:text-on-primary-fixed uppercase font-bold">VALACUGI</div>
+<div class="flex items-center gap-4 hover:bg-primary hover:text-on-primary dark:hover:bg-primary-fixed dark:hover:text-on-primary-fixed transition-colors duration-75 p-2 cursor-pointer text-primary dark:text-on-primary-fixed">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="pt-16 max-w-7xl mx-auto md:px-margin-desktop">
+<!-- Header -->
+<header class="px-margin-mobile md:px-0 py-lg brutal-border-b">
+<h1 class="font-headline-lg-mobile md:font-display-lg text-headline-lg-mobile md:text-display-lg text-primary uppercase">Tokyo Trip</h1>
+<p class="font-data-tabular text-data-tabular text-on-surface-variant mt-sm">REF: VAL-TYO-24</p>
+</header>
+<!-- 2x2 Data Grid -->
+<section class="grid grid-cols-2 md:grid-cols-4 brutal-border-b brutal-border-x mx-margin-mobile md:mx-0 mt-lg">
+<!-- DATES -->
+<div class="p-md brutal-border-r brutal-border-b md:brutal-border-b-0 flex flex-col justify-between h-32 bg-surface-lowest">
+<span class="font-label-sm text-label-sm uppercase text-on-surface-variant tracking-widest">DATES</span>
+<span class="font-data-tabular text-data-tabular text-primary">24/08 - 30/08</span>
+</div>
+<!-- ROSTER -->
+<div class="p-md brutal-border-b md:brutal-border-b-0 md:brutal-border-r flex flex-col justify-between h-32 bg-surface-bright">
+<span class="font-label-sm text-label-sm uppercase text-on-surface-variant tracking-widest">ROSTER</span>
+<span class="font-data-tabular text-data-tabular text-primary">4 PAX</span>
+</div>
+<!-- BUDGET -->
+<div class="p-md brutal-border-r flex flex-col justify-between h-32 bg-surface-container-low">
+<span class="font-label-sm text-label-sm uppercase text-on-surface-variant tracking-widest">BUDGET</span>
+<span class="font-data-tabular text-data-tabular text-primary">¥500k</span>
+</div>
+<!-- COORDS -->
+<div class="p-md flex flex-col justify-between h-32 bg-surface-container">
+<span class="font-label-sm text-label-sm uppercase text-on-surface-variant tracking-widest">COORDS</span>
+<span class="font-data-tabular text-data-tabular text-primary">35.6 N, 139.6 E</span>
+</div>
+</section>
+<!-- Image / Map Banner (Optional but adds flavor) -->
+<div class="mx-margin-mobile md:mx-0 mt-lg brutal-border h-48 md:h-64 bg-cover bg-center relative" data-alt="A stark, high-contrast black and white aerial photograph of the dense Tokyo cityscape at night. The dense grid of buildings stretches out infinitely, punctuated only by the glowing veins of major highways. The image fits perfectly with a brutalist, utilitarian interface design, emphasizing structure, density, and monochrome visual weight." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBb3RiCF2XmzevMMvboRYANGqd5vLwVLB5vs3ZfRBGA6xNZEbFvDaTQg1hbqXciBmpiE1-OnjQNhi-TfIiEX-2ZkTf3nRtGlDCMe5oEaVfov2e92tES8Rn8DhrKw2m0tmkAUYtIP6RhEo9Cj5tLb2L9g1Z_0vf0jy47QE5kUCUvhEbNuTY_juKGJjg3G0l8aeOgqHbrciR_LUp3_c7hDtdTX1X758Z4iog-9KlV3E1l691kTzTyLWPtUflqY7gpVvfNv--nHynDag');">
+<div class="absolute bottom-0 right-0 bg-primary text-on-primary font-data-tabular text-data-tabular p-2">
+                SAT MAP // TYO
+            </div>
+</div>
+<!-- Timeline Section -->
+<section class="px-margin-mobile md:px-0 py-lg mt-lg">
+<h2 class="font-headline-md text-headline-md text-primary uppercase mb-md">Itinerary</h2>
+<div class="relative pl-6 mt-md">
+<!-- Vertical Line -->
+<div class="absolute left-0 top-2 bottom-0 w-[2px] bg-primary"></div>
+<!-- Day 01 -->
+<div class="relative mb-lg">
+<!-- Node -->
+<div class="absolute -left-[27px] top-1 w-2 h-2 bg-primary"></div>
+<div class="brutal-border p-md bg-surface-bright">
+<div class="flex justify-between items-start mb-sm">
+<span class="font-data-tabular text-data-tabular text-primary font-bold">DAY 01</span>
+<span class="font-label-sm text-label-sm uppercase text-on-surface-variant bg-surface-variant px-2 py-1 brutal-border">ARRIVE</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-primary mt-sm">Arrive Narita</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mt-sm">NRT T1. Transfer to NEX. Secure Suica.</p>
+</div>
+</div>
+<!-- Day 02 -->
+<div class="relative mb-lg">
+<!-- Node -->
+<div class="absolute -left-[27px] top-1 w-2 h-2 bg-primary"></div>
+<div class="brutal-border p-md bg-surface-bright">
+<div class="flex justify-between items-start mb-sm">
+<span class="font-data-tabular text-data-tabular text-primary font-bold">DAY 02</span>
+<span class="font-label-sm text-label-sm uppercase text-on-surface-variant bg-surface-variant px-2 py-1 brutal-border">LOCALE</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-primary mt-sm">Shinjuku Grid</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mt-sm">Navigate Shinjuku station complex. Base camp setup.</p>
+<div class="mt-md pt-md brutal-border-t">
+<div class="flex justify-between items-center py-2 brutal-border-b">
+<span class="font-body-md text-body-md text-primary">Omoide Yokocho</span>
+<span class="font-data-tabular text-data-tabular text-on-surface-variant">19:00</span>
+</div>
+<div class="flex justify-between items-center py-2">
+<span class="font-body-md text-body-md text-primary">Golden Gai</span>
+<span class="font-data-tabular text-data-tabular text-on-surface-variant">21:30</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main><nav class="fixed bottom-0 left-0 w-full z-50 flex h-16 bg-surface dark:bg-surface-container border-t border-primary dark:border-outline md:hidden">
+  <a href="#" class="flex-1 flex flex-col items-center justify-center text-primary dark:text-on-primary-fixed hover:bg-surface-container-high">
+    <span class="material-symbols-outlined">map</span>
+    <span class="font-label-sm text-[10px] uppercase mt-1">Itinerary</span>
+  </a>
+  <a href="#" class="flex-1 flex flex-col items-center justify-center text-primary dark:text-on-primary-fixed border-l border-primary/20 hover:bg-surface-container-high">
+    <span class="material-symbols-outlined">chat_bubble</span>
+    <span class="font-label-sm text-[10px] uppercase mt-1">Messages</span>
+  </a>
+  <a href="#" class="flex-1 flex flex-col items-center justify-center text-primary dark:text-on-primary-fixed border-l border-primary/20 hover:bg-surface-container-high">
+    <span class="material-symbols-outlined">person</span>
+    <span class="font-label-sm text-[10px] uppercase mt-1">Identity</span>
+  </a>
+</nav>
+<!-- Floating Action Bar (Task-Focused / Transactional implies no global nav here, FAB overrides) -->
+
+
+
+
+
+</body></html>

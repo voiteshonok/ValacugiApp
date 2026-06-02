@@ -1,0 +1,252 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Valacugi - Identity</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Space+Mono:wght@400;700&amp;display=swap" rel="stylesheet">
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<style>
+        .material-symbols-outlined {
+            font-family: 'Material Symbols Outlined';
+            font-weight: normal;
+            font-style: normal;
+            font-size: 24px;
+            line-height: 1;
+            letter-spacing: normal;
+            text-transform: none;
+            display: inline-block;
+            white-space: nowrap;
+            word-wrap: normal;
+            direction: ltr;
+            -webkit-font-feature-settings: 'liga';
+            -webkit-font-smoothing: antialiased;
+        }
+    </style>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface-bright": "#faf9f9",
+                        "primary": "#000000",
+                        "on-background": "#1b1c1c",
+                        "on-error-container": "#93000a",
+                        "on-tertiary-fixed-variant": "#474747",
+                        "secondary-fixed-dim": "#ffb4a4",
+                        "surface-dim": "#dbdad9",
+                        "inverse-on-surface": "#f2f0f0",
+                        "inverse-primary": "#c6c6c6",
+                        "on-error": "#ffffff",
+                        "secondary-fixed": "#ffdad3",
+                        "tertiary-fixed": "#e2e2e2",
+                        "surface-container-lowest": "#ffffff",
+                        "error": "#ba1a1a",
+                        "surface-container": "#efeded",
+                        "on-tertiary-fixed": "#1b1b1b",
+                        "on-primary": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "outline-variant": "#cfc4c5",
+                        "on-secondary": "#ffffff",
+                        "on-secondary-fixed": "#3e0500",
+                        "tertiary": "#000000",
+                        "surface-container-high": "#e9e8e8",
+                        "on-secondary-container": "#fffbff",
+                        "primary-fixed": "#e2e2e2",
+                        "primary-container": "#1b1b1b",
+                        "tertiary-container": "#1b1b1b",
+                        "on-surface-variant": "#4c4546",
+                        "background": "#faf9f9",
+                        "error-container": "#ffdad6",
+                        "outline": "#7e7576",
+                        "primary-fixed-dim": "#c6c6c6",
+                        "tertiary-fixed-dim": "#c6c6c6",
+                        "on-primary-container": "#848484",
+                        "surface-container-highest": "#e3e2e2",
+                        "on-secondary-fixed-variant": "#8c1800",
+                        "surface-container-low": "#f5f3f3",
+                        "on-surface": "#1b1c1c",
+                        "secondary": "#b32100",
+                        "surface-tint": "#5e5e5e",
+                        "inverse-surface": "#303031",
+                        "surface-variant": "#e3e2e2",
+                        "on-tertiary-container": "#848484",
+                        "on-primary-fixed-variant": "#474747",
+                        "surface": "#faf9f9",
+                        "on-primary-fixed": "#1b1b1b",
+                        "secondary-container": "#e02c00"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    spacing: {
+                        "lg": "32px",
+                        "unit": "16px",
+                        "margin-mobile": "16px",
+                        "md": "16px",
+                        "gutter": "16px",
+                        "sm": "8px",
+                        "xl": "64px",
+                        "xs": "4px",
+                        "margin-desktop": "32px"
+                    },
+                    fontFamily: {
+                        "display-lg": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "data-tabular": ["Space Mono"],
+                        "body-md": ["Inter"],
+                        "label-sm": ["Inter"]
+                    },
+                    fontSize: {
+                        "display-lg": ["48px", { lineHeight: "1.1", letterSpacing: "-0.03em", fontWeight: "600" }],
+                        "headline-lg-mobile": ["24px", { lineHeight: "1.2", letterSpacing: "-0.02em", fontWeight: "600" }],
+                        "headline-md": ["20px", { lineHeight: "1.2", letterSpacing: "-0.01em", fontWeight: "600" }],
+                        "headline-lg": ["32px", { lineHeight: "1.2", letterSpacing: "-0.02em", fontWeight: "600" }],
+                        "data-tabular": ["14px", { lineHeight: "1.4", letterSpacing: "0em", fontWeight: "400" }],
+                        "body-md": ["16px", { lineHeight: "1.5", letterSpacing: "0em", fontWeight: "400" }],
+                        "label-sm": ["12px", { lineHeight: "1", letterSpacing: "0.05em", fontWeight: "500" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-primary font-body-md antialiased min-h-screen flex flex-col pt-[64px] pb-[64px] selection:bg-primary selection:text-on-primary">
+<!-- TopAppBar -->
+<header class="bg-surface dark:bg-surface-container border-b border-primary dark:border-outline fixed top-0 w-full z-50 flex justify-between items-center px-md h-16">
+<button class="text-primary dark:text-on-primary-fixed hover:bg-primary hover:text-on-primary dark:hover:bg-primary-fixed dark:hover:text-on-primary-fixed transition-colors duration-75 active:invert flex items-center justify-center p-sm">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+</button>
+<div class="font-data-tabular text-headline-md tracking-tighter text-primary dark:text-on-primary-fixed uppercase font-bold text-center">
+            [&nbsp;<span style="text-align: start;" class="">VALACUGI</span>&nbsp;]
+        </div>
+<button class="text-primary dark:text-on-primary-fixed hover:bg-primary hover:text-on-primary dark:hover:bg-primary-fixed dark:hover:text-on-primary-fixed transition-colors duration-75 active:invert flex items-center justify-center p-sm">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+</header>
+<!-- Main Canvas -->
+<main class="flex-grow flex flex-col w-full max-w-screen-md mx-auto relative border-l border-r border-primary">
+<!-- User Block (Asymmetric Brutalist Entry) -->
+<section class="border-b border-primary p-lg lg:p-xl flex flex-col lg:flex-row gap-lg items-start bg-surface-container-lowest">
+<div aria-label="User Avatar" class="w-32 h-32 bg-primary flex-shrink-0 relative overflow-hidden">
+<!-- Brutalist blank avatar block -->
+</div>
+<div class="flex flex-col gap-xs pt-sm lg:pt-0">
+<h1 class="font-display-lg text-display-lg text-primary uppercase break-words leading-none">
+                    IDENTITY
+                </h1>
+<div class="font-data-tabular text-data-tabular text-primary flex items-center gap-sm mt-md">
+<span class="w-4 h-4 bg-primary inline-block"></span>
+                    ID: USER_4921
+                </div>
+
+</div>
+</section>
+<!-- System Settings Section -->
+<section class="flex flex-col w-full">
+<div class="px-md py-sm border-b border-primary bg-surface-container-high">
+<h2 class="font-label-sm text-label-sm uppercase text-primary tracking-widest">System Configuration</h2>
+</div>
+<!-- List Layout -->
+<ul class="flex flex-col w-full list-none p-0 m-0">
+<!-- PUSH_NOTIFS -->
+<li class="border-b border-primary flex items-stretch hover:bg-surface-container transition-colors group cursor-pointer">
+<div class="flex-grow p-md flex items-center">
+<span class="font-data-tabular text-data-tabular text-primary group-hover:pl-sm transition-all duration-150">
+                            PUSH_NOTIFS
+                        </span>
+</div>
+<div class="p-md border-l border-primary flex items-center justify-center bg-surface-bright group-hover:bg-surface">
+<!-- Checked Square -->
+<div class="w-6 h-6 bg-primary flex items-center justify-center border border-primary">
+<span class="material-symbols-outlined text-on-primary" data-icon="check" style="font-size: 16px; font-variation-settings: 'FILL' 1;">check</span>
+</div>
+</div>
+</li>
+<!-- DARK_MODE -->
+<li class="border-b border-primary flex items-stretch hover:bg-surface-container transition-colors group cursor-pointer">
+<div class="flex-grow p-md flex items-center">
+<span class="font-data-tabular text-data-tabular text-primary line-through opacity-50 group-hover:pl-sm transition-all duration-150">
+                            DARK_MODE
+                        </span>
+</div>
+<div class="p-md border-l border-primary flex items-center justify-center bg-surface-bright group-hover:bg-surface">
+<!-- Unchecked Square -->
+<div class="w-6 h-6 bg-surface border border-primary flex items-center justify-center">
+<!-- empty -->
+</div>
+</div>
+</li>
+<!-- LOGOUT -->
+<li class="flex items-stretch hover:bg-secondary hover:text-on-secondary transition-colors group cursor-pointer border-b border-primary">
+<div class="flex-grow p-md flex items-center">
+<span class="font-label-sm text-label-sm uppercase font-bold tracking-widest group-hover:pl-sm transition-all duration-150">
+                            LOGOUT
+                        </span>
+</div>
+<div class="p-md border-l border-primary group-hover:border-secondary flex items-center justify-center group-hover:bg-secondary-container">
+<span class="material-symbols-outlined group-hover:text-on-secondary" data-icon="logout">logout</span>
+</div>
+</li>
+</ul>
+</section>
+<!-- Decorative Filler to push footer down if short screen -->
+<div class="flex-grow bg-[#f5f5f5] pattern-dots text-outline opacity-20" style="background-image: radial-gradient(currentColor 1px, transparent 1px); background-size: 16px 16px;"></div>
+</main>
+<!-- BottomNavBar -->
+<nav class="bg-surface dark:bg-surface-container border-t border-primary dark:border-outline fixed bottom-0 left-0 w-full z-50 flex justify-around items-stretch h-16 md:hidden">
+<!-- Tab 1: ITINERARY -->
+<a class="flex flex-col items-center justify-center text-primary dark:text-on-tertiary-fixed-variant h-full w-full hover:bg-surface-container-high dark:hover:bg-inverse-surface active:bg-secondary dark:active:bg-secondary-container transition-colors border-r border-primary" href="#">
+<span class="material-symbols-outlined mb-xs" data-icon="calendar_today">calendar_today</span>
+<span class="font-label-sm text-label-sm uppercase">TRIPS</span>
+</a>
+<!-- Tab 2: ATLAS -->
+
+<!-- Tab 3: MESSAGES -->
+<a class="flex flex-col items-center justify-center text-primary dark:text-on-tertiary-fixed-variant h-full w-full hover:bg-surface-container-high dark:hover:bg-inverse-surface active:bg-secondary dark:active:bg-secondary-container transition-colors border-r border-primary" href="#">
+<span class="material-symbols-outlined mb-xs" data-icon="chat_bubble">chat_bubble</span>
+<span class="font-label-sm text-label-sm uppercase">MESSAGES</span>
+</a>
+<!-- Tab 4: IDENTITY (Active) -->
+<a class="flex flex-col items-center justify-center bg-primary dark:bg-primary-fixed text-on-primary dark:text-on-primary-fixed h-full w-full hover:bg-surface-container-high dark:hover:bg-inverse-surface active:bg-secondary dark:active:bg-secondary-container transition-colors" href="#">
+<span class="material-symbols-outlined mb-xs" data-icon="person" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="font-label-sm text-label-sm uppercase">IDENTITY</span>
+</a>
+</nav>
+<!-- Desktop Nav Shim (Visible only on md+) -->
+<nav class="hidden md:flex bg-surface border-t border-primary fixed bottom-0 left-0 w-full z-50 justify-between items-center h-16 px-md">
+<div class="font-data-tabular text-data-tabular text-outline">
+            VALACUGI_SYS_V1.4 // DESKTOP_MODE_ENGAGED
+        </div>
+<div class="flex gap-md h-full">
+<a class="h-full px-md flex items-center font-label-sm text-label-sm uppercase text-primary border-l border-primary hover:bg-surface-container" href="#">ITINERARY</a>
+
+<a class="h-full px-md flex items-center font-label-sm text-label-sm uppercase text-primary border-l border-primary hover:bg-surface-container" href="#">MESSAGES</a>
+<a class="h-full px-md flex items-center font-label-sm text-label-sm uppercase bg-primary text-on-primary border-l border-primary" href="#">IDENTITY</a>
+</div>
+</nav>
+
+
+
+
+
+
+
+
+</body></html>

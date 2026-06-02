@@ -1,0 +1,186 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Valacugi - Trip Chat</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Space+Mono:wght@400;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary": "#b32100",
+                        "surface": "#faf9f9",
+                        "on-surface-variant": "#4c4546",
+                        "primary-container": "#1b1b1b",
+                        "on-primary-fixed": "#1b1b1b",
+                        "background": "#faf9f9",
+                        "on-error": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-container": "#e02c00",
+                        "primary-fixed": "#e2e2e2",
+                        "on-secondary-fixed": "#3e0500",
+                        "secondary-fixed": "#ffdad3",
+                        "surface-dim": "#dbdad9",
+                        "error": "#ba1a1a",
+                        "secondary-fixed-dim": "#ffb4a4",
+                        "outline": "#7e7576",
+                        "surface-variant": "#e3e2e2",
+                        "on-background": "#1b1c1c",
+                        "inverse-on-surface": "#f2f0f0",
+                        "inverse-surface": "#303031",
+                        "on-tertiary-fixed-variant": "#474747",
+                        "on-surface": "#1b1c1c",
+                        "surface-container-low": "#f5f3f3",
+                        "on-primary": "#ffffff",
+                        "tertiary-fixed": "#e2e2e2",
+                        "surface-container-high": "#e9e8e8",
+                        "tertiary-container": "#1b1b1b",
+                        "on-primary-container": "#848484",
+                        "tertiary": "#000000",
+                        "on-tertiary-fixed": "#1b1b1b",
+                        "on-secondary": "#ffffff",
+                        "tertiary-fixed-dim": "#c6c6c6",
+                        "surface-bright": "#faf9f9",
+                        "outline-variant": "#cfc4c5",
+                        "on-secondary-fixed-variant": "#8c1800",
+                        "on-secondary-container": "#fffbff",
+                        "inverse-primary": "#c6c6c6",
+                        "surface-container": "#efeded",
+                        "on-error-container": "#93000a",
+                        "on-tertiary-container": "#848484",
+                        "on-primary-fixed-variant": "#474747",
+                        "error-container": "#ffdad6",
+                        "surface-tint": "#5e5e5e",
+                        "primary-fixed-dim": "#c6c6c6",
+                        "surface-container-highest": "#e3e2e2",
+                        "on-tertiary": "#ffffff",
+                        "primary": "#000000"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0rem",
+                        "lg": "0rem",
+                        "xl": "0rem",
+                        "full": "0rem"
+                    },
+                    "spacing": {
+                        "margin-desktop": "32px",
+                        "md": "16px",
+                        "sm": "8px",
+                        "xl": "64px",
+                        "gutter": "16px",
+                        "unit": "16px",
+                        "xs": "4px",
+                        "margin-mobile": "16px",
+                        "lg": "32px"
+                    },
+                    "fontFamily": {
+                        "headline-lg-mobile": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "data-tabular": ["Space Mono"]
+                    },
+                    "fontSize": {
+                        "headline-lg-mobile": ["24px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                        "headline-lg": ["32px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "1.5", "letterSpacing": "0em", "fontWeight": "400" }],
+                        "label-sm": ["12px", { "lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "display-lg": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.03em", "fontWeight": "600" }],
+                        "headline-md": ["20px", { "lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "data-tabular": ["14px", { "lineHeight": "1.4", "letterSpacing": "0em", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { background-color: #ffffff; color: #000000; }
+        .border-1 { border-width: 1px; }
+    </style>
+</head>
+<body class="bg-background min-h-screen flex flex-col font-body-md text-body-md antialiased pt-16 pb-32">
+<!-- TopAppBar -->
+<header class="bg-surface dark:bg-surface-container font-display-lg text-display-lg font-data-tabular text-data-tabular docked full-width top-0 border-b border-primary dark:border-outline flat no shadows fixed top-0 w-full z-50 flex justify-between items-center px-md h-16">
+<div class="flex items-center text-primary dark:text-on-primary-fixed">
+<span class="material-symbols-outlined cursor-pointer hover:bg-primary hover:text-on-primary dark:hover:bg-primary-fixed dark:hover:text-on-primary-fixed transition-colors duration-75 p-2 active:invert" data-icon="menu">menu</span>
+</div>
+<div class="font-data-tabular text-headline-md tracking-tighter text-primary dark:text-on-primary-fixed uppercase font-bold text-center flex-1">
+            TOKYO_JP_04
+        </div>
+<div class="flex items-center text-primary dark:text-on-primary-fixed">
+<span class="material-symbols-outlined cursor-pointer hover:bg-primary hover:text-on-primary dark:hover:bg-primary-fixed dark:hover:text-on-primary-fixed transition-colors duration-75 p-2 active:invert" data-icon="notifications">notifications</span>
+</div>
+</header>
+<!-- Main Chat Area -->
+<main class="flex-1 overflow-y-auto px-margin-mobile md:px-margin-desktop py-md flex flex-col gap-sm max-w-[1280px] mx-auto w-full">
+<!-- Message Box: Other User -->
+<div class="border-1 border-primary p-md flex flex-col gap-xs bg-surface-container-lowest">
+<div class="flex justify-between items-center border-b border-primary pb-xs mb-xs">
+<span class="font-data-tabular text-data-tabular text-primary">USER_4921</span>
+<span class="font-data-tabular text-data-tabular text-on-surface-variant">08:14</span>
+</div>
+<p class="font-body-md text-body-md text-primary">Landed at HND. Taking the monorail now.</p>
+</div>
+<!-- Message Box: System Alert -->
+
+<!-- Message Box: Current User -->
+<div class="border-1 border-primary p-md flex flex-col gap-xs bg-surface-container-lowest ml-xl">
+<div class="flex justify-between items-center border-b border-primary pb-xs mb-xs">
+<span class="font-data-tabular text-data-tabular text-primary">USER_1001 (YOU)</span>
+<span class="font-data-tabular text-data-tabular text-on-surface-variant">08:20</span>
+</div>
+<p class="font-body-md text-body-md text-primary">Copy that. Meeting you at Shinjuku Station East Exit.</p>
+</div>
+<!-- Message Box: Other User -->
+<div class="border-1 border-primary p-md flex flex-col gap-xs bg-surface-container-lowest">
+<div class="flex justify-between items-center border-b border-primary pb-xs mb-xs">
+<span class="font-data-tabular text-data-tabular text-primary">USER_4921</span>
+<span class="font-data-tabular text-data-tabular text-on-surface-variant">08:22</span>
+</div>
+<p class="font-body-md text-body-md text-primary">Should be there in 45 mins. Grab me a coffee?</p>
+</div>
+<!-- Message Box: Current User -->
+<div class="border-1 border-primary p-md flex flex-col gap-xs bg-surface-container-lowest ml-xl">
+<div class="flex justify-between items-center border-b border-primary pb-xs mb-xs">
+<span class="font-data-tabular text-data-tabular text-primary">USER_1001 (YOU)</span>
+<span class="font-data-tabular text-data-tabular text-on-surface-variant">08:25</span>
+</div>
+<p class="font-body-md text-body-md text-primary">Already ordered. Black, no sugar.</p>
+</div>
+</main>
+<!-- Input Area -->
+<div class="fixed bottom-16 left-0 w-full bg-surface-container-lowest border-t border-primary p-sm z-40 max-w-[1280px] left-1/2 -translate-x-1/2">
+<div class="flex border-1 border-primary bg-surface-container-lowest">
+<input class="flex-1 bg-transparent border-none font-data-tabular text-data-tabular text-primary placeholder:text-on-surface-variant focus:ring-0 p-md focus:outline-none" placeholder="TRANSMIT_MESSAGE..." type="text">
+<button class="border-l border-primary px-md bg-primary text-on-primary hover:bg-surface hover:text-primary transition-colors font-data-tabular text-data-tabular font-bold active:invert">
+                -&gt;
+            </button>
+</div>
+</div>
+<!-- BottomNavBar -->
+<nav class="bg-surface dark:bg-surface-container font-label-sm text-label-sm uppercase docked full-width bottom-0 border-t border-primary dark:border-outline flat no shadows fixed bottom-0 left-0 w-full z-50 flex justify-around items-stretch h-16 max-w-[1280px] left-1/2 -translate-x-1/2">
+<div class="flex flex-col items-center justify-center text-primary dark:text-on-tertiary-fixed-variant h-full w-full hover:bg-surface-container-high dark:hover:bg-inverse-surface active:bg-secondary dark:active:bg-secondary-container cursor-pointer transition-colors duration-75">
+<span class="material-symbols-outlined" data-icon="calendar_today">calendar_today</span>
+<span class="mt-xs">ITINERARY</span>
+</div>
+
+<div class="flex flex-col items-center justify-center bg-primary dark:bg-primary-fixed text-on-primary dark:text-on-primary-fixed h-full w-full active:invert cursor-pointer transition-colors duration-75">
+<span class="material-symbols-outlined" data-icon="chat_bubble">chat_bubble</span>
+<span class="mt-xs">MESSAGES</span>
+</div>
+<div class="flex flex-col items-center justify-center text-primary dark:text-on-tertiary-fixed-variant h-full w-full hover:bg-surface-container-high dark:hover:bg-inverse-surface active:bg-secondary dark:active:bg-secondary-container cursor-pointer transition-colors duration-75">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="mt-xs">IDENTITY</span>
+</div>
+</nav>
+
+
+
+
+</body></html>
