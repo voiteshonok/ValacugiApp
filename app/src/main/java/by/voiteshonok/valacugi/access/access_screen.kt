@@ -38,16 +38,21 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.foundation.Canvas
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Composable
 fun AccessScreen(
     modifier: Modifier = Modifier,
-    onContinue: (AccessCredentials) -> Unit = {}
+    onContinue: suspend (AccessCredentials) -> Unit = {}
 ) {
     var identification: String by remember { mutableStateOf("") }
     var credential: String by remember { mutableStateOf("") }
+    var isAuthenticating: Boolean by remember { mutableStateOf(false) }
+    val coroutineScope = rememberCoroutineScope()
     Surface(
         modifier = modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.surface
@@ -122,16 +127,21 @@ fun AccessScreen(
                     ),
                     contentPadding = PaddingValues(horizontal = 16.dp, vertical = 0.dp),
                     onClick = {
-                        onContinue(
-                            AccessCredentials(
-                                identification = identification.trim(),
-                                credential = credential
-                            )
+                        if (isAuthenticating) return@Button
+                        val credentials = AccessCredentials(
+                            identification = identification.trim(),
+                            credential = credential
                         )
+                        isAuthenticating = true
+                        coroutineScope.launch {
+                            delay(900L)
+                            onContinue(credentials)
+                            isAuthenticating = false
+                        }
                     }
                 ) {
                     Text(
-                        text = "CONTINUE  →",
+                        text = if (isAuthenticating) "AUTHENTICATING..." else "CONTINUE  →",
                         modifier = Modifier.fillMaxWidth(),
                         textAlign = TextAlign.Center,
                         style = TextStyle(
