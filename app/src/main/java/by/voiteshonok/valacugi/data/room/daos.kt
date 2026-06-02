@@ -21,14 +21,29 @@ interface UsersDao {
 
 @Dao
 interface TripsDao {
-    @Query("SELECT * FROM trips ORDER BY title ASC")
-    fun observeTrips(): Flow<List<TripEntity>>
+    @Query(
+        """
+        SELECT trips.*,
+               (SELECT COUNT(*) FROM trip_assignments WHERE trip_assignments.trip_id = trips.trip_id) AS assigned_count
+        FROM trips
+        ORDER BY title ASC
+        """
+    )
+    fun observeTrips(): Flow<List<TripWithAssignedCountEntity>>
 
     @Query("SELECT COUNT(*) FROM trips")
     suspend fun getTripsCount(): Int
 
-    @Query("SELECT * FROM trips WHERE trip_id = :tripId LIMIT 1")
-    fun observeTrip(tripId: String): Flow<TripEntity?>
+    @Query(
+        """
+        SELECT trips.*,
+               (SELECT COUNT(*) FROM trip_assignments WHERE trip_assignments.trip_id = trips.trip_id) AS assigned_count
+        FROM trips
+        WHERE trip_id = :tripId
+        LIMIT 1
+        """
+    )
+    fun observeTrip(tripId: String): Flow<TripWithAssignedCountEntity?>
 
     @Query("SELECT * FROM itinerary_days WHERE trip_id = :tripId ORDER BY day_index ASC")
     fun observeDays(tripId: String): Flow<List<ItineraryDayEntity>>
@@ -39,6 +54,9 @@ interface TripsDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTrips(trips: List<TripEntity>)
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertAssignments(assignments: List<TripAssignmentEntity>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertDays(days: List<ItineraryDayEntity>)

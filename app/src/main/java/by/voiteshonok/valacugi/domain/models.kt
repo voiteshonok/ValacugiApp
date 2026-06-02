@@ -13,8 +13,8 @@ data class Trip(
     val dateEnd: String?,
     val pax: Int?,
     val budgetText: String?,
-    val assignedCount: Int?,
-    val assignedTotal: Int?
+    val createdById: String,
+    val assignedCount: Int?
 )
 
 data class ItineraryDay(

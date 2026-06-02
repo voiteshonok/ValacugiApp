@@ -37,14 +37,10 @@ object TripDisplayFormatter {
 
     fun formatAssigned(trip: Trip): String {
         val assignedCount: Int? = trip.assignedCount
-        val assignedTotal: Int? = trip.assignedTotal
-        if (assignedCount == null && assignedTotal == null) {
+        if (assignedCount == null) {
             return UnknownPlaceholder
         }
-        if (assignedTotal == null) {
-            return "${assignedCount ?: "?"}/?"
-        }
-        return "${assignedCount ?: "?"}/$assignedTotal"
+        return "$assignedCount/?"
     }
 
     private fun formatIsoDateShort(isoDate: String): String {

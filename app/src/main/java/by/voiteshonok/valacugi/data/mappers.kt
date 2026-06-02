@@ -3,6 +3,7 @@ package by.voiteshonok.valacugi.data
 import by.voiteshonok.valacugi.data.room.ItineraryDayEntity
 import by.voiteshonok.valacugi.data.room.ItineraryStepEntity
 import by.voiteshonok.valacugi.data.room.TripEntity
+import by.voiteshonok.valacugi.data.room.TripWithAssignedCountEntity
 import by.voiteshonok.valacugi.data.room.UserEntity
 import by.voiteshonok.valacugi.domain.ItineraryDay
 import by.voiteshonok.valacugi.domain.ItineraryStep
@@ -17,16 +18,16 @@ fun UserEntity.toDomain(): User {
     )
 }
 
-fun TripEntity.toDomain(): Trip {
+fun TripWithAssignedCountEntity.toDomain(): Trip {
     return Trip(
-        id = tripId,
-        title = title,
-        dateStart = dateStart,
-        dateEnd = dateEnd,
-        pax = pax,
-        budgetText = budgetText,
-        assignedCount = assignedCount,
-        assignedTotal = assignedTotal
+        id = trip.tripId,
+        title = trip.title,
+        dateStart = trip.dateStart,
+        dateEnd = trip.dateEnd,
+        pax = trip.pax,
+        budgetText = trip.budgetText,
+        createdById = trip.createdById,
+        assignedCount = assignedCount
     )
 }
 

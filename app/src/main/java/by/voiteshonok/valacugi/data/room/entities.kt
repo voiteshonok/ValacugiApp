@@ -6,6 +6,7 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import androidx.room.Relation
+import androidx.room.Embedded
 
 @Entity(
     tableName = "users"
@@ -37,10 +38,44 @@ data class TripEntity(
     val pax: Int?,
     @ColumnInfo(name = "budget_text")
     val budgetText: String?,
+    @ColumnInfo(name = "created_by_id")
+    val createdById: String
+)
+
+@Entity(
+    tableName = "trip_assignments",
+    primaryKeys = ["trip_id", "person_id"],
+    foreignKeys = [
+        ForeignKey(
+            entity = TripEntity::class,
+            parentColumns = ["trip_id"],
+            childColumns = ["trip_id"],
+            onDelete = ForeignKey.CASCADE
+        ),
+        ForeignKey(
+            entity = UserEntity::class,
+            parentColumns = ["user_id"],
+            childColumns = ["person_id"],
+            onDelete = ForeignKey.CASCADE
+        )
+    ],
+    indices = [
+        Index(value = ["trip_id"]),
+        Index(value = ["person_id"])
+    ]
+)
+data class TripAssignmentEntity(
+    @ColumnInfo(name = "trip_id")
+    val tripId: String,
+    @ColumnInfo(name = "person_id")
+    val personId: String
+)
+
+data class TripWithAssignedCountEntity(
+    @Embedded
+    val trip: TripEntity,
     @ColumnInfo(name = "assigned_count")
-    val assignedCount: Int?,
-    @ColumnInfo(name = "assigned_total")
-    val assignedTotal: Int?
+    val assignedCount: Int
 )
 
 @Entity(
@@ -102,7 +137,7 @@ data class ItineraryStepEntity(
 )
 
 data class ItineraryDayWithStepsEntity(
-    @androidx.room.Embedded
+    @Embedded
     val day: ItineraryDayEntity,
     @Relation(
         parentColumn = "day_id",

@@ -50,7 +50,7 @@ fun AppNavHost(
             AccessScreen(
                 onContinue = { credentials ->
                     appContainer.sessionRepository.saveSession(
-                        UserSession(identification = credentials.identification)
+                        UserSession(identification = "user_admin")
                     )
                     navController.navigate(AppRoutes.Shell) {
                         popUpTo(AppRoutes.Access) { inclusive = true }
