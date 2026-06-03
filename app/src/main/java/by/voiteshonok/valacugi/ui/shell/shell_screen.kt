@@ -1,18 +1,21 @@
 package by.voiteshonok.valacugi.ui.shell
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Email
@@ -22,9 +25,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -32,10 +36,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
 import by.voiteshonok.valacugi.core.navigation.AppRoutes
 import by.voiteshonok.valacugi.core.notifications.ValacugiNotificationSender
 import by.voiteshonok.valacugi.core.session.SessionRepository
@@ -52,6 +52,15 @@ import by.voiteshonok.valacugi.ui.trips.TripsScreen
 import by.voiteshonok.valacugi.ui.trips.TripsViewModelFactory
 import kotlinx.coroutines.launch
 
+private const val ShellTabCount: Int = 3
+
+private enum class ShellTab(val pageIndex: Int) {
+    Trips(pageIndex = 0),
+    Messages(pageIndex = 1),
+    Identity(pageIndex = 2)
+}
+
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ShellScreen(
     modifier: Modifier = Modifier,
@@ -63,10 +72,12 @@ fun ShellScreen(
     notificationSender: ValacugiNotificationSender,
     onLogout: suspend () -> Unit
 ) {
-    val shellNavController: NavHostController = rememberNavController()
+    val pagerState = rememberPagerState(
+        initialPage = ShellTab.Trips.pageIndex,
+        pageCount = { ShellTabCount }
+    )
     val coroutineScope = rememberCoroutineScope()
-    val navBackStackEntry = shellNavController.currentBackStackEntryAsState().value
-    val currentRoute: String? = navBackStackEntry?.destination?.route
+    val selectedPageIndex: Int = pagerState.currentPage
     Scaffold(
         modifier = modifier,
         bottomBar = {
@@ -83,69 +94,85 @@ fun ShellScreen(
                     modifier = Modifier.weight(1f),
                     label = "TRIPS",
                     icon = Icons.Filled.DateRange,
-                    isSelected = currentRoute == AppRoutes.Trips,
+                    isSelected = selectedPageIndex == ShellTab.Trips.pageIndex,
                     showStartBorder = false,
-                    onClick = { shellNavController.navigate(AppRoutes.Trips) { launchSingleTop = true } }
+                    onClick = {
+                        coroutineScope.launch {
+                            pagerState.animateScrollToPage(page = ShellTab.Trips.pageIndex)
+                        }
+                    }
                 )
                 ShellNavigationItem(
                     modifier = Modifier.weight(1f),
                     label = "MESSAGES",
                     icon = Icons.Filled.Email,
-                    isSelected = currentRoute == AppRoutes.Directory,
+                    isSelected = selectedPageIndex == ShellTab.Messages.pageIndex,
                     showStartBorder = true,
-                    onClick = { shellNavController.navigate(AppRoutes.Directory) { launchSingleTop = true } }
+                    onClick = {
+                        coroutineScope.launch {
+                            pagerState.animateScrollToPage(page = ShellTab.Messages.pageIndex)
+                        }
+                    }
                 )
                 ShellNavigationItem(
                     modifier = Modifier.weight(1f),
                     label = "IDENTITY",
                     icon = Icons.Filled.Person,
-                    isSelected = currentRoute == AppRoutes.Identity,
+                    isSelected = selectedPageIndex == ShellTab.Identity.pageIndex,
                     showStartBorder = true,
-                    onClick = { shellNavController.navigate(AppRoutes.Identity) { launchSingleTop = true } }
+                    onClick = {
+                        coroutineScope.launch {
+                            pagerState.animateScrollToPage(page = ShellTab.Identity.pageIndex)
+                        }
+                    }
                 )
             }
         }
     ) { innerPadding ->
-        NavHost(
-            navController = shellNavController,
-            startDestination = AppRoutes.Trips,
-            modifier = Modifier.padding(innerPadding)
-        ) {
-            composable(route = AppRoutes.Trips) {
-                TripsScreen(
-                    onOpenAtlas = { tripId: String ->
-                        rootNavController.navigate("atlas/$tripId")
-                    },
-                    onOpenTripConstructor = {
-                        rootNavController.navigate(AppRoutes.TripConstructor)
-                    },
-                    viewModelFactory = TripsViewModelFactory(tripsRepository = tripsRepository)
-                )
-            }
-            composable(route = AppRoutes.Directory) {
-                DirectoryScreen(
-                    viewModelFactory = DirectoryViewModelFactory(
-                        threadsRepository = threadsRepository,
-                        sessionRepository = sessionRepository
-                    ),
-                    onOpenChat = { threadId: String ->
-                        rootNavController.navigate("chat/$threadId")
-                    }
-                )
-            }
-            composable(route = AppRoutes.Identity) {
-                IdentityScreen(
-                    viewModelFactory = IdentityViewModelFactory(
-                        sessionRepository = sessionRepository,
-                        usersRepository = usersRepository,
-                        notificationSender = notificationSender
-                    ),
-                    onLogout = {
-                        coroutineScope.launch {
-                            onLogout()
+        HorizontalPager(
+            state = pagerState,
+            modifier = Modifier
+                .padding(innerPadding)
+                .fillMaxSize(),
+            beyondViewportPageCount = 1
+        ) { pageIndex: Int ->
+            when (pageIndex) {
+                ShellTab.Trips.pageIndex -> {
+                    TripsScreen(
+                        onOpenAtlas = { tripId: String ->
+                            rootNavController.navigate("atlas/$tripId")
+                        },
+                        onOpenTripConstructor = {
+                            rootNavController.navigate(AppRoutes.TripConstructor)
+                        },
+                        viewModelFactory = TripsViewModelFactory(tripsRepository = tripsRepository)
+                    )
+                }
+                ShellTab.Messages.pageIndex -> {
+                    DirectoryScreen(
+                        viewModelFactory = DirectoryViewModelFactory(
+                            threadsRepository = threadsRepository,
+                            sessionRepository = sessionRepository
+                        ),
+                        onOpenChat = { threadId: String ->
+                            rootNavController.navigate("chat/$threadId")
                         }
-                    }
-                )
+                    )
+                }
+                ShellTab.Identity.pageIndex -> {
+                    IdentityScreen(
+                        viewModelFactory = IdentityViewModelFactory(
+                            sessionRepository = sessionRepository,
+                            usersRepository = usersRepository,
+                            notificationSender = notificationSender
+                        ),
+                        onLogout = {
+                            coroutineScope.launch {
+                                onLogout()
+                            }
+                        }
+                    )
+                }
             }
         }
     }
@@ -155,7 +182,7 @@ fun ShellScreen(
 private fun ShellNavigationItem(
     modifier: Modifier = Modifier,
     label: String,
-    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    icon: ImageVector,
     isSelected: Boolean,
     showStartBorder: Boolean,
     onClick: () -> Unit
@@ -197,4 +224,3 @@ private fun ShellNavigationItem(
         )
     }
 }
-
