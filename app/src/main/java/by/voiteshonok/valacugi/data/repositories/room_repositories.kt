@@ -8,6 +8,7 @@ import by.voiteshonok.valacugi.data.room.createMessageId
 import by.voiteshonok.valacugi.data.room.createSentAtIsoTimestamp
 import by.voiteshonok.valacugi.data.room.truncateMessagePreview
 import by.voiteshonok.valacugi.data.room.TripAssignmentEntity
+import by.voiteshonok.valacugi.data.room.TripEntity
 import by.voiteshonok.valacugi.data.room.TripsDao
 import by.voiteshonok.valacugi.data.room.UsersDao
 import by.voiteshonok.valacugi.domain.ItineraryDayWithSteps
@@ -95,18 +96,35 @@ class RoomTripsRepository(
     private val tripsDao: TripsDao
 ) : TripsRepository {
     override fun observeTrips(): Flow<List<Trip>> {
-        return tripsDao.observeTrips().map { entities -> entities.map { it.toDomain() } }
+        return combine(
+            tripsDao.observeTripEntities(),
+            tripsDao.observeTripAssignments()
+        ) { tripEntities: List<TripEntity>, assignments: List<TripAssignmentEntity> ->
+            mapTripsWithAssignmentCounts(
+                tripEntities = tripEntities,
+                assignments = assignments
+            )
+        }
     }
 
     override fun observeTripItinerary(tripId: String): Flow<TripItinerary?> {
-        return tripsDao.observeTrip(tripId).combine(tripsDao.observeItineraryDays(tripId)) { tripEntity, dayWithSteps ->
-            if (tripEntity == null) return@combine null
+        return combine(
+            tripsDao.observeTripEntity(tripId = tripId),
+            tripsDao.observeTripAssignments(),
+            tripsDao.observeItineraryDays(tripId = tripId)
+        ) { tripEntity: TripEntity?, assignments: List<TripAssignmentEntity>, dayWithSteps ->
+            if (tripEntity == null) {
+                return@combine null
+            }
+            val assignedCount: Int = assignments.count { assignment: TripAssignmentEntity ->
+                assignment.tripId == tripId
+            }
             TripItinerary(
-                trip = tripEntity.toDomain(),
+                trip = tripEntity.toDomainTrip(assignedCount = assignedCount),
                 days = dayWithSteps.map { dayWithStepsEntity ->
                     ItineraryDayWithSteps(
                         day = dayWithStepsEntity.day.toDomain(),
-                        steps = dayWithStepsEntity.steps.map { it.toDomain() }
+                        steps = dayWithStepsEntity.steps.map { stepEntity -> stepEntity.toDomain() }
                     )
                 }
             )
@@ -129,5 +147,31 @@ class RoomTripsRepository(
     override suspend fun unassignUserFromTrip(tripId: String, userId: String) {
         tripsDao.deleteAssignment(tripId = tripId, userId = userId)
     }
+}
+
+private fun mapTripsWithAssignmentCounts(
+    tripEntities: List<TripEntity>,
+    assignments: List<TripAssignmentEntity>
+): List<Trip> {
+    val assignedCountByTripId: Map<String, Int> = assignments
+        .groupingBy { assignment: TripAssignmentEntity -> assignment.tripId }
+        .eachCount()
+    return tripEntities.map { tripEntity: TripEntity ->
+        val assignedCount: Int = assignedCountByTripId[tripEntity.tripId] ?: 0
+        tripEntity.toDomainTrip(assignedCount = assignedCount)
+    }
+}
+
+private fun TripEntity.toDomainTrip(assignedCount: Int): Trip {
+    return Trip(
+        id = tripId,
+        title = title,
+        dateStart = dateStart,
+        dateEnd = dateEnd,
+        pax = pax,
+        budgetText = budgetText,
+        createdById = createdById,
+        assignedCount = assignedCount
+    )
 }
 

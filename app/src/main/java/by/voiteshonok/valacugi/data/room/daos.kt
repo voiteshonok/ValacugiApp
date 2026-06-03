@@ -52,6 +52,15 @@ interface TripsDao {
     )
     fun observeTrips(): Flow<List<TripWithAssignedCountEntity>>
 
+    @Query("SELECT * FROM trips ORDER BY title ASC")
+    fun observeTripEntities(): Flow<List<TripEntity>>
+
+    @Query("SELECT * FROM trips WHERE trip_id = :tripId LIMIT 1")
+    fun observeTripEntity(tripId: String): Flow<TripEntity?>
+
+    @Query("SELECT * FROM trip_assignments")
+    fun observeTripAssignments(): Flow<List<TripAssignmentEntity>>
+
     @Query("SELECT COUNT(*) FROM trips")
     suspend fun getTripsCount(): Int
 
