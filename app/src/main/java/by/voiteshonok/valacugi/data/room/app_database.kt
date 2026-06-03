@@ -31,9 +31,7 @@ abstract class AppDatabase : RoomDatabase() {
                 .fallbackToDestructiveMigration(dropAllTables = true)
                 .build()
             CoroutineScope(Dispatchers.IO).launch {
-                val tripsCount: Int = database.tripsDao().getTripsCount()
-                if (tripsCount > 0) return@launch
-                ValacugiSeeder.seed(database = database)
+                ValacugiSeeder.ensureSeedAndPatches(database = database)
             }
             return database
         }
@@ -41,6 +39,25 @@ abstract class AppDatabase : RoomDatabase() {
 }
 
 private object ValacugiSeeder {
+    private const val HanoiTripId: String = "trip_hanoi"
+    private const val RegularUserId: String = "user_user"
+
+    suspend fun ensureSeedAndPatches(database: AppDatabase) {
+        val tripsCount: Int = database.tripsDao().getTripsCount()
+        if (tripsCount == 0) {
+            seed(database = database)
+        }
+        applyPatches(database = database)
+    }
+
+    suspend fun applyPatches(database: AppDatabase) {
+        database.tripsDao().insertAssignments(
+            listOf(
+                TripAssignmentEntity(tripId = HanoiTripId, personId = RegularUserId)
+            )
+        )
+    }
+
     suspend fun seed(database: AppDatabase) {
         val adminUserId: String = "user_admin"
         val regularUserId: String = "user_user"
@@ -62,6 +79,7 @@ private object ValacugiSeeder {
         )
         val tokyoTripId: String = "trip_tokyo"
         val londonTripId: String = "trip_london"
+        val hanoiTripId: String = HanoiTripId
         val trips: List<TripEntity> = listOf(
             TripEntity(
                 tripId = londonTripId,
@@ -127,7 +145,7 @@ private object ValacugiSeeder {
                 createdById = adminUserId
             ),
             TripEntity(
-                tripId = "trip_hanoi",
+                tripId = hanoiTripId,
                 title = "HANOI",
                 dateStart = "2026-07-12",
                 dateEnd = "2026-07-16",
@@ -173,9 +191,12 @@ private object ValacugiSeeder {
             )
         )
         val assignments: List<TripAssignmentEntity> = trips.flatMap { trip ->
-            listOf(
-                TripAssignmentEntity(tripId = trip.tripId, personId = adminUserId)
-            )
+            buildList {
+                add(TripAssignmentEntity(tripId = trip.tripId, personId = adminUserId))
+                if (trip.tripId == hanoiTripId) {
+                    add(TripAssignmentEntity(tripId = trip.tripId, personId = regularUserId))
+                }
+            }
         }
         val itineraryDays: List<ItineraryDayEntity> = listOf(
             ItineraryDayEntity(dayId = "day_tokyo_01", tripId = tokyoTripId, dayIndex = 1, title = "DAY 01 — ARRIVAL"),

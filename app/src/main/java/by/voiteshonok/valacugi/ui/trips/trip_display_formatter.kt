@@ -40,7 +40,8 @@ object TripDisplayFormatter {
         if (assignedCount == null) {
             return UnknownPlaceholder
         }
-        return "$assignedCount/?"
+        val capacityLabel: String = trip.pax?.toString() ?: "?"
+        return "$assignedCount/$capacityLabel"
     }
 
     private fun formatIsoDateShort(isoDate: String): String {
