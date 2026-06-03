@@ -12,5 +12,8 @@ interface UsersRepository {
 interface TripsRepository {
     fun observeTrips(): Flow<List<Trip>>
     fun observeTripItinerary(tripId: String): Flow<TripItinerary?>
+    fun observeIsUserAssignedToTrip(tripId: String, userId: String): Flow<Boolean>
+    suspend fun assignUserToTrip(tripId: String, userId: String)
+    suspend fun unassignUserFromTrip(tripId: String, userId: String)
 }
 

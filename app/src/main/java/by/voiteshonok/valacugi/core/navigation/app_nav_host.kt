@@ -92,7 +92,9 @@ fun AppNavHost(
             TripDetailsScreen(
                 viewModelFactory = TripDetailsViewModelFactory(
                     tripId = tripId,
-                    getTripDetails = GetTripDetails(tripsRepository = appContainer.tripsRepository)
+                    getTripDetails = GetTripDetails(tripsRepository = appContainer.tripsRepository),
+                    tripsRepository = appContainer.tripsRepository,
+                    sessionRepository = appContainer.sessionRepository
                 )
             )
         }

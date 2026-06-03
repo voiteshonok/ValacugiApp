@@ -4,16 +4,22 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.ui.platform.testTag
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -65,6 +71,15 @@ fun TripDetailsScreen(
         item {
             TripDetailsGrid(trip = itinerary.trip)
         }
+        if (uiState.canManageMembership) {
+            item {
+                TripMembershipButton(
+                    label = uiState.membershipButtonLabel,
+                    isEnabled = !uiState.isMembershipActionInProgress,
+                    onClick = viewModel::onMembershipButtonClick
+                )
+            }
+        }
         item {
             Text(
                 text = "ITINERARY",
@@ -113,6 +128,44 @@ private fun TripDetailsHeader(trip: Trip) {
                 fontWeight = FontWeight.Normal,
                 fontSize = 14.sp,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        )
+    }
+}
+
+@Composable
+private fun TripMembershipButton(
+    label: String,
+    isEnabled: Boolean,
+    onClick: () -> Unit
+) {
+    val testTag: String = if (label == "UNJOIN") {
+        TripDetailsTestTags.UnjoinButton
+    } else {
+        TripDetailsTestTags.JoinButton
+    }
+    Button(
+        modifier = Modifier
+            .testTag(testTag)
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .height(56.dp),
+        shape = RectangleShape,
+        colors = ButtonDefaults.buttonColors(
+            containerColor = MaterialTheme.colorScheme.primary,
+            contentColor = MaterialTheme.colorScheme.onPrimary
+        ),
+        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 0.dp),
+        enabled = isEnabled,
+        onClick = onClick
+    ) {
+        Text(
+            text = label,
+            style = TextStyle(
+                fontFamily = FontFamily.SansSerif,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 14.sp,
+                letterSpacing = 1.sp
             )
         )
     }

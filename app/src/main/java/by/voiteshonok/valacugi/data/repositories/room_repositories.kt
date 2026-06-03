@@ -1,6 +1,7 @@
 package by.voiteshonok.valacugi.data.repositories
 
 import by.voiteshonok.valacugi.data.toDomain
+import by.voiteshonok.valacugi.data.room.TripAssignmentEntity
 import by.voiteshonok.valacugi.data.room.TripsDao
 import by.voiteshonok.valacugi.data.room.UsersDao
 import by.voiteshonok.valacugi.domain.ItineraryDayWithSteps
@@ -51,6 +52,23 @@ class RoomTripsRepository(
                 }
             )
         }
+    }
+
+    override fun observeIsUserAssignedToTrip(tripId: String, userId: String): Flow<Boolean> {
+        return tripsDao.observeUserAssignmentCount(tripId = tripId, userId = userId)
+            .map { assignmentCount: Int -> assignmentCount > 0 }
+    }
+
+    override suspend fun assignUserToTrip(tripId: String, userId: String) {
+        tripsDao.insertAssignments(
+            assignments = listOf(
+                TripAssignmentEntity(tripId = tripId, personId = userId)
+            )
+        )
+    }
+
+    override suspend fun unassignUserFromTrip(tripId: String, userId: String) {
+        tripsDao.deleteAssignment(tripId = tripId, userId = userId)
     }
 }
 

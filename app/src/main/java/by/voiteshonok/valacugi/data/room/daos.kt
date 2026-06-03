@@ -79,6 +79,22 @@ interface TripsDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertAssignments(assignments: List<TripAssignmentEntity>)
 
+    @Query(
+        """
+        SELECT COUNT(*) FROM trip_assignments
+        WHERE trip_id = :tripId AND person_id = :userId
+        """
+    )
+    fun observeUserAssignmentCount(tripId: String, userId: String): Flow<Int>
+
+    @Query(
+        """
+        DELETE FROM trip_assignments
+        WHERE trip_id = :tripId AND person_id = :userId
+        """
+    )
+    suspend fun deleteAssignment(tripId: String, userId: String)
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertDays(days: List<ItineraryDayEntity>)
 
