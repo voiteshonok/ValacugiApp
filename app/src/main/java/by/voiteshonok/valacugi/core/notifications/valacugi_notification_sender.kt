@@ -17,11 +17,11 @@ object ValacugiNotificationChannels {
 
 class ValacugiNotificationSender(
     private val context: Context
-) {
+) : NotificationSender {
     private val notificationManager: NotificationManagerCompat =
         NotificationManagerCompat.from(context)
 
-    fun canPostNotifications(): Boolean {
+    override fun canPostNotifications(): Boolean {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
             return notificationManager.areNotificationsEnabled()
         }
@@ -32,7 +32,7 @@ class ValacugiNotificationSender(
         return hasPermission && notificationManager.areNotificationsEnabled()
     }
 
-    fun sendBellAlert(): Boolean {
+    override fun sendBellAlert(): Boolean {
         return sendAlert(
             title = context.getString(R.string.notification_bell_title),
             message = context.getString(R.string.notification_bell_message)

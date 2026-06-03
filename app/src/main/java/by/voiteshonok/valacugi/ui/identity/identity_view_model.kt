@@ -3,7 +3,7 @@ package by.voiteshonok.valacugi.ui.identity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import by.voiteshonok.valacugi.core.notifications.ValacugiNotificationSender
+import by.voiteshonok.valacugi.core.notifications.NotificationSender
 import by.voiteshonok.valacugi.core.session.SessionRepository
 import by.voiteshonok.valacugi.domain.User
 import by.voiteshonok.valacugi.domain.UsersRepository
@@ -21,7 +21,7 @@ import kotlinx.coroutines.launch
 class IdentityViewModel(
     private val sessionRepository: SessionRepository,
     private val usersRepository: UsersRepository,
-    private val notificationSender: ValacugiNotificationSender
+    private val notificationSender: NotificationSender
 ) : ViewModel() {
     private val _uiState: MutableStateFlow<IdentityUiState> = MutableStateFlow(IdentityUiState())
     val uiState: StateFlow<IdentityUiState> = _uiState.asStateFlow()
@@ -84,7 +84,7 @@ class IdentityViewModel(
 class IdentityViewModelFactory(
     private val sessionRepository: SessionRepository,
     private val usersRepository: UsersRepository,
-    private val notificationSender: ValacugiNotificationSender
+    private val notificationSender: NotificationSender
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(IdentityViewModel::class.java)) {

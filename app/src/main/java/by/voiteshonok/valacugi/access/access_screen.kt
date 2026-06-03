@@ -25,6 +25,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -110,6 +111,7 @@ fun AccessScreen(
                     placeholder = "USER@DOMAIN.COM",
                     value = identification,
                     keyboardType = KeyboardType.Email,
+                    testTag = AccessTestTags.IdentificationField,
                     onValueChange = { nextValue: String ->
                         identification = nextValue
                         errorMessage = null
@@ -122,6 +124,7 @@ fun AccessScreen(
                     value = credential,
                     keyboardType = KeyboardType.Password,
                     visualTransformation = PasswordVisualTransformation(),
+                    testTag = AccessTestTags.CredentialField,
                     onValueChange = { nextValue: String ->
                         credential = nextValue
                         errorMessage = null
@@ -143,6 +146,7 @@ fun AccessScreen(
                 Spacer(modifier = Modifier.height(32.dp))
                 Button(
                     modifier = Modifier
+                        .testTag(AccessTestTags.ContinueButton)
                         .fillMaxWidth()
                         .height(56.dp),
                     shape = RectangleShape,
@@ -202,6 +206,7 @@ private fun AtlasField(
     value: String,
     keyboardType: KeyboardType,
     visualTransformation: VisualTransformation = VisualTransformation.None,
+    testTag: String? = null,
     onValueChange: (String) -> Unit
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
@@ -221,6 +226,13 @@ private fun AtlasField(
                 value = value,
                 onValueChange = onValueChange,
                 modifier = Modifier
+                    .then(
+                        if (testTag != null) {
+                            Modifier.testTag(testTag)
+                        } else {
+                            Modifier
+                        }
+                    )
                     .fillMaxWidth()
                     .padding(vertical = 10.dp),
                 singleLine = true,
