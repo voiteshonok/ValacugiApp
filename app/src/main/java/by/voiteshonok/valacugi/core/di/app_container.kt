@@ -1,6 +1,7 @@
 package by.voiteshonok.valacugi.core.di
 
 import android.content.Context
+import by.voiteshonok.valacugi.access.AccessCredentialsValidator
 import by.voiteshonok.valacugi.data.repositories.RoomTripsRepository
 import by.voiteshonok.valacugi.data.repositories.RoomUsersRepository
 import by.voiteshonok.valacugi.data.room.AppDatabase
@@ -14,5 +15,7 @@ class AppContainer(context: Context) {
     val database: AppDatabase = AppDatabase.create(context = context)
     val usersRepository: UsersRepository = RoomUsersRepository(usersDao = database.usersDao())
     val tripsRepository: TripsRepository = RoomTripsRepository(tripsDao = database.tripsDao())
+    val accessCredentialsValidator: AccessCredentialsValidator =
+        AccessCredentialsValidator(usersRepository = usersRepository)
 }
 

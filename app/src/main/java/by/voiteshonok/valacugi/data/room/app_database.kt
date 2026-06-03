@@ -18,7 +18,7 @@ private const val DatabaseName: String = "valacugi.db"
         ItineraryDayEntity::class,
         ItineraryStepEntity::class
     ],
-    version = 6,
+    version = 7,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -43,10 +43,20 @@ abstract class AppDatabase : RoomDatabase() {
 private object ValacugiSeeder {
     suspend fun seed(database: AppDatabase) {
         val adminUserId: String = "user_admin"
-        val operatorUserId: String = "user_operator"
+        val regularUserId: String = "user_user"
         val users: List<UserEntity> = listOf(
-            UserEntity(userId = adminUserId, login = "admin", displayName = "Administrator"),
-            UserEntity(userId = operatorUserId, login = "operator", displayName = "Operator")
+            UserEntity(
+                userId = adminUserId,
+                login = "admin",
+                password = "admin",
+                displayName = "Administrator"
+            ),
+            UserEntity(
+                userId = regularUserId,
+                login = "user",
+                password = "user",
+                displayName = "User"
+            )
         )
         val tokyoTripId: String = "trip_tokyo"
         val londonTripId: String = "trip_london"

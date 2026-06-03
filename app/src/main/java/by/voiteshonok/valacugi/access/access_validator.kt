@@ -1,12 +1,16 @@
 package by.voiteshonok.valacugi.access
 
-object AccessCredentialsValidator {
-    private const val ValidIdentification: String = "admin"
-    private const val ValidCredential: String = "admin"
+import by.voiteshonok.valacugi.domain.User
+import by.voiteshonok.valacugi.domain.UsersRepository
 
-    fun isValid(identification: String, credential: String): Boolean {
-        val normalizedIdentification: String = identification.trim()
-        return normalizedIdentification.equals(ValidIdentification, ignoreCase = true) &&
-            credential == ValidCredential
+class AccessCredentialsValidator(
+    private val usersRepository: UsersRepository
+) {
+    suspend fun authenticate(identification: String, credential: String): User? {
+        val normalizedLogin: String = identification.trim()
+        if (normalizedLogin.isEmpty() || credential.isEmpty()) {
+            return null
+        }
+        return usersRepository.authenticate(login = normalizedLogin, password = credential)
     }
 }

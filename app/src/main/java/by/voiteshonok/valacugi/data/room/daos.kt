@@ -15,6 +15,15 @@ interface UsersDao {
     @Query("SELECT COUNT(*) FROM users")
     suspend fun getUsersCount(): Int
 
+    @Query(
+        """
+        SELECT * FROM users
+        WHERE LOWER(login) = LOWER(:login) AND password = :password
+        LIMIT 1
+        """
+    )
+    suspend fun findByCredentials(login: String, password: String): UserEntity?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(users: List<UserEntity>)
 }

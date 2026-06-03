@@ -8,6 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import by.voiteshonok.valacugi.access.AccessCredentials
 import by.voiteshonok.valacugi.access.AccessScreen
 import by.voiteshonok.valacugi.core.di.AppContainer
 import by.voiteshonok.valacugi.core.session.UserSession
@@ -48,9 +49,15 @@ fun AppNavHost(
         }
         composable(route = AppRoutes.Access) {
             AccessScreen(
-                onContinue = { credentials ->
+                authenticate = { credentials: AccessCredentials ->
+                    appContainer.accessCredentialsValidator.authenticate(
+                        identification = credentials.identification,
+                        credential = credentials.credential
+                    )
+                },
+                onContinue = { user ->
                     appContainer.sessionRepository.saveSession(
-                        UserSession(identification = "user_admin")
+                        UserSession(identification = user.id)
                     )
                     navController.navigate(AppRoutes.Shell) {
                         popUpTo(AppRoutes.Access) { inclusive = true }

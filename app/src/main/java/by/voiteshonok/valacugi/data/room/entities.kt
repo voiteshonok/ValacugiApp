@@ -17,6 +17,8 @@ data class UserEntity(
     val userId: String,
     @ColumnInfo(name = "login")
     val login: String,
+    @ColumnInfo(name = "password")
+    val password: String,
     @ColumnInfo(name = "display_name")
     val displayName: String
 )

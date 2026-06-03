@@ -4,6 +4,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface UsersRepository {
     fun observeUsers(): Flow<List<User>>
+    suspend fun authenticate(login: String, password: String): User?
 }
 
 interface TripsRepository {

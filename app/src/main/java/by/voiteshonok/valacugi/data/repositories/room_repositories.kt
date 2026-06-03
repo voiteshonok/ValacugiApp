@@ -19,6 +19,10 @@ class RoomUsersRepository(
     override fun observeUsers(): Flow<List<User>> {
         return usersDao.observeUsers().map { entities -> entities.map { it.toDomain() } }
     }
+    override suspend fun authenticate(login: String, password: String): User? {
+        val entity = usersDao.findByCredentials(login = login.trim(), password = password)
+        return entity?.toDomain()
+    }
 }
 
 class RoomTripsRepository(

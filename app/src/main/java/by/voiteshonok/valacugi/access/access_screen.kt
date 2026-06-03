@@ -41,6 +41,7 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import by.voiteshonok.valacugi.domain.User
 import by.voiteshonok.valacugi.ui.theme.AtlasError
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -50,7 +51,8 @@ private const val InvalidCredentialsMessage: String = "WRONG LOGIN / PASSWORD"
 @Composable
 fun AccessScreen(
     modifier: Modifier = Modifier,
-    onContinue: suspend (AccessCredentials) -> Unit = {}
+    authenticate: suspend (AccessCredentials) -> User? = { null },
+    onContinue: suspend (User) -> Unit = {}
 ) {
     var identification: String by remember { mutableStateOf("") }
     var credential: String by remember { mutableStateOf("") }
@@ -159,17 +161,13 @@ fun AccessScreen(
                         isAuthenticating = true
                         errorMessage = null
                         coroutineScope.launch {
-                            delay(900L)
-                            if (!AccessCredentialsValidator.isValid(
-                                    identification = credentials.identification,
-                                    credential = credentials.credential
-                                )
-                            ) {
+                            val authenticatedUser: User? = authenticate(credentials)
+                            if (authenticatedUser == null) {
                                 errorMessage = InvalidCredentialsMessage
                                 isAuthenticating = false
                                 return@launch
                             }
-                            onContinue(credentials)
+                            onContinue(authenticatedUser)
                             isAuthenticating = false
                         }
                     }
