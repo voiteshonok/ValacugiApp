@@ -20,8 +20,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -44,12 +42,12 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import by.voiteshonok.valacugi.ui.shell.ShellTabTopBar
 import by.voiteshonok.valacugi.ui.theme.AtlasDotPattern
 import by.voiteshonok.valacugi.ui.theme.AtlasPrimary
 import by.voiteshonok.valacugi.ui.theme.AtlasSurfaceBright
 import by.voiteshonok.valacugi.ui.theme.AtlasSurfaceContainerHigh
 
-private const val TopBarHeightDp: Int = 64
 private const val AvatarSizeDp: Int = 128
 private const val ConfigCheckboxSizeDp: Int = 24
 
@@ -85,7 +83,8 @@ fun IdentityScreen(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.surface)
     ) {
-        IdentityTopBar(
+        ShellTabTopBar(
+            title = "[  VALACUGI  ]",
             onMenuClick = onMenuClick,
             onNotificationsClick = onBellClick
         )
@@ -103,48 +102,6 @@ fun IdentityScreen(
                 .weight(1f)
                 .dotPatternBackground()
         )
-    }
-}
-
-@Composable
-private fun IdentityTopBar(
-    onMenuClick: () -> Unit,
-    onNotificationsClick: () -> Unit
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(TopBarHeightDp.dp)
-            .border(width = 1.dp, color = MaterialTheme.colorScheme.primary)
-            .background(MaterialTheme.colorScheme.surface)
-            .padding(horizontal = 8.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        IconButton(onClick = onMenuClick) {
-            Icon(
-                imageVector = Icons.Filled.Menu,
-                contentDescription = "Menu",
-                tint = MaterialTheme.colorScheme.primary
-            )
-        }
-        Text(
-            text = "[  VALACUGI  ]",
-            style = TextStyle(
-                fontFamily = FontFamily.Monospace,
-                fontWeight = FontWeight.Bold,
-                fontSize = 20.sp,
-                letterSpacing = (-0.5).sp,
-                color = MaterialTheme.colorScheme.primary
-            )
-        )
-        IconButton(onClick = onNotificationsClick) {
-            Icon(
-                imageVector = Icons.Filled.Notifications,
-                contentDescription = "Notifications",
-                tint = MaterialTheme.colorScheme.primary
-            )
-        }
     }
 }
 

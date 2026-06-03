@@ -1,5 +1,6 @@
 package by.voiteshonok.valacugi.ui.directory
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,21 +22,33 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import by.voiteshonok.valacugi.domain.MessageThread
+import by.voiteshonok.valacugi.ui.shell.ShellTabTopBar
 
 @Composable
 fun DirectoryScreen(
     modifier: Modifier = Modifier,
     viewModelFactory: ViewModelProvider.Factory,
-    onOpenChat: (String) -> Unit
+    onOpenChat: (String) -> Unit,
+    onMenuClick: () -> Unit = {},
+    onNotificationsClick: () -> Unit = {}
 ) {
     val viewModel: DirectoryViewModel = viewModel(factory = viewModelFactory)
     val uiState: DirectoryUiState by viewModel.uiState.collectAsStateWithLifecycle()
-    Column(modifier = modifier.fillMaxSize()) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.surface)
+    ) {
+        ShellTabTopBar(
+            title = "[ MESSAGES ]",
+            onMenuClick = onMenuClick,
+            onNotificationsClick = onNotificationsClick
+        )
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .border(width = 1.dp, color = MaterialTheme.colorScheme.primary)
-                .padding(horizontal = 16.dp, vertical = 24.dp)
+                .padding(horizontal = 16.dp, vertical = 12.dp)
         ) {
             Text(
                 text = "DIRECTORY",
@@ -43,7 +56,7 @@ fun DirectoryScreen(
                     fontFamily = FontFamily.SansSerif,
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 24.sp,
-                    letterSpacing = (-0.5).sp,
+                    letterSpacing = 1.sp,
                     color = MaterialTheme.colorScheme.primary
                 )
             )
@@ -62,6 +75,7 @@ fun DirectoryScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f)
+                .border(width = 1.dp, color = MaterialTheme.colorScheme.primary)
         ) {
             items(items = uiState.threads, key = { thread: MessageThread -> thread.id }) { thread: MessageThread ->
                 DirectoryChatRow(
