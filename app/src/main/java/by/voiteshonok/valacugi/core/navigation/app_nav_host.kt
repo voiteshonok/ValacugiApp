@@ -70,6 +70,9 @@ fun AppNavHost(
             ShellScreen(
                 rootNavController = navController,
                 tripsRepository = appContainer.tripsRepository,
+                usersRepository = appContainer.usersRepository,
+                sessionRepository = appContainer.sessionRepository,
+                notificationSender = appContainer.notificationSender,
                 onLogout = {
                     appContainer.sessionRepository.clearSession()
                     navController.navigate(AppRoutes.Access) {

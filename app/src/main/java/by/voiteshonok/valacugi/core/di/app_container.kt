@@ -5,6 +5,7 @@ import by.voiteshonok.valacugi.access.AccessCredentialsValidator
 import by.voiteshonok.valacugi.data.repositories.RoomTripsRepository
 import by.voiteshonok.valacugi.data.repositories.RoomUsersRepository
 import by.voiteshonok.valacugi.data.room.AppDatabase
+import by.voiteshonok.valacugi.core.notifications.ValacugiNotificationSender
 import by.voiteshonok.valacugi.core.session.DataStoreSessionRepository
 import by.voiteshonok.valacugi.core.session.SessionRepository
 import by.voiteshonok.valacugi.domain.TripsRepository
@@ -17,5 +18,7 @@ class AppContainer(context: Context) {
     val tripsRepository: TripsRepository = RoomTripsRepository(tripsDao = database.tripsDao())
     val accessCredentialsValidator: AccessCredentialsValidator =
         AccessCredentialsValidator(usersRepository = usersRepository)
+    val notificationSender: ValacugiNotificationSender =
+        ValacugiNotificationSender(context = context.applicationContext)
 }
 

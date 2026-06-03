@@ -20,7 +20,9 @@ data class UserEntity(
     @ColumnInfo(name = "password")
     val password: String,
     @ColumnInfo(name = "display_name")
-    val displayName: String
+    val displayName: String,
+    @ColumnInfo(name = "push_notifications_enabled", defaultValue = "1")
+    val pushNotificationsEnabled: Boolean = true
 )
 
 @Entity(

@@ -12,6 +12,9 @@ interface UsersDao {
     @Query("SELECT * FROM users ORDER BY login ASC")
     fun observeUsers(): Flow<List<UserEntity>>
 
+    @Query("SELECT * FROM users WHERE user_id = :userId LIMIT 1")
+    fun observeUser(userId: String): Flow<UserEntity?>
+
     @Query("SELECT COUNT(*) FROM users")
     suspend fun getUsersCount(): Int
 
@@ -23,6 +26,15 @@ interface UsersDao {
         """
     )
     suspend fun findByCredentials(login: String, password: String): UserEntity?
+
+    @Query(
+        """
+        UPDATE users
+        SET push_notifications_enabled = :isEnabled
+        WHERE user_id = :userId
+        """
+    )
+    suspend fun updatePushNotificationsEnabled(userId: String, isEnabled: Boolean)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(users: List<UserEntity>)

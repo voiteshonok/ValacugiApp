@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Valacugi</string>
+    <string name="notification_channel_alerts_name">Valacugi alerts</string>
+    <string name="notification_channel_alerts_description">System alerts from Valacugi</string>
+    <string name="notification_bell_title">VALACUGI</string>
+    <string name="notification_bell_message">SYSTEM ALERT — CHECK TRANSMISSIONS</string>
 </resources>

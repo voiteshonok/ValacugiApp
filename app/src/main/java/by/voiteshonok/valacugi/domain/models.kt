@@ -3,7 +3,8 @@ package by.voiteshonok.valacugi.domain
 data class User(
     val id: String,
     val login: String,
-    val displayName: String
+    val displayName: String,
+    val isPushNotificationsEnabled: Boolean
 )
 
 data class Trip(

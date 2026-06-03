@@ -19,9 +19,15 @@ class RoomUsersRepository(
     override fun observeUsers(): Flow<List<User>> {
         return usersDao.observeUsers().map { entities -> entities.map { it.toDomain() } }
     }
+    override fun observeUser(userId: String): Flow<User?> {
+        return usersDao.observeUser(userId = userId).map { entity -> entity?.toDomain() }
+    }
     override suspend fun authenticate(login: String, password: String): User? {
         val entity = usersDao.findByCredentials(login = login.trim(), password = password)
         return entity?.toDomain()
+    }
+    override suspend fun setPushNotificationsEnabled(userId: String, isEnabled: Boolean) {
+        usersDao.updatePushNotificationsEnabled(userId = userId, isEnabled = isEnabled)
     }
 }
 

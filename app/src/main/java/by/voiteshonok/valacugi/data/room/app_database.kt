@@ -18,7 +18,7 @@ private const val DatabaseName: String = "valacugi.db"
         ItineraryDayEntity::class,
         ItineraryStepEntity::class
     ],
-    version = 7,
+    version = 8,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -49,13 +49,15 @@ private object ValacugiSeeder {
                 userId = adminUserId,
                 login = "admin",
                 password = "admin",
-                displayName = "Administrator"
+                displayName = "Administrator",
+                pushNotificationsEnabled = true
             ),
             UserEntity(
                 userId = regularUserId,
                 login = "user",
                 password = "user",
-                displayName = "User"
+                displayName = "User",
+                pushNotificationsEnabled = true
             )
         )
         val tokyoTripId: String = "trip_tokyo"

@@ -14,7 +14,8 @@ fun UserEntity.toDomain(): User {
     return User(
         id = userId,
         login = login,
-        displayName = displayName
+        displayName = displayName,
+        isPushNotificationsEnabled = pushNotificationsEnabled
     )
 }
 
