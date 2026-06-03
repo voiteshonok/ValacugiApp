@@ -9,6 +9,12 @@ interface UsersRepository {
     suspend fun setPushNotificationsEnabled(userId: String, isEnabled: Boolean)
 }
 
+interface ThreadsRepository {
+    fun observeThreads(): Flow<List<MessageThread>>
+    fun observeThreadsForUser(userId: String): Flow<List<MessageThread>>
+    fun observeThread(threadId: String): Flow<MessageThread?>
+}
+
 interface TripsRepository {
     fun observeTrips(): Flow<List<Trip>>
     fun observeTripItinerary(tripId: String): Flow<TripItinerary?>

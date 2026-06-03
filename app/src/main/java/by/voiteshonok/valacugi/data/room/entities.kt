@@ -47,6 +47,36 @@ data class TripEntity(
 )
 
 @Entity(
+    tableName = "threads",
+    foreignKeys = [
+        ForeignKey(
+            entity = TripEntity::class,
+            parentColumns = ["trip_id"],
+            childColumns = ["trip_id"],
+            onDelete = ForeignKey.CASCADE
+        )
+    ],
+    indices = [
+        Index(value = ["trip_id"], unique = true)
+    ]
+)
+data class ThreadEntity(
+    @PrimaryKey
+    @ColumnInfo(name = "thread_id")
+    val threadId: String,
+    @ColumnInfo(name = "trip_id")
+    val tripId: String,
+    @ColumnInfo(name = "title")
+    val title: String,
+    @ColumnInfo(name = "last_message_preview")
+    val lastMessagePreview: String,
+    @ColumnInfo(name = "last_message_at")
+    val lastMessageAt: String,
+    @ColumnInfo(name = "has_unread", defaultValue = "0")
+    val hasUnread: Boolean = false
+)
+
+@Entity(
     tableName = "trip_assignments",
     primaryKeys = ["trip_id", "person_id"],
     foreignKeys = [

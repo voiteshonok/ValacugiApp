@@ -16,6 +16,8 @@ import by.voiteshonok.valacugi.domain.GetTripDetails
 import by.voiteshonok.valacugi.ui.atlas.TripDetailsScreen
 import by.voiteshonok.valacugi.ui.atlas.TripDetailsViewModelFactory
 import by.voiteshonok.valacugi.ui.boot.BootScreen
+import by.voiteshonok.valacugi.ui.chat.ChatScreen
+import by.voiteshonok.valacugi.ui.chat.ChatViewModelFactory
 import by.voiteshonok.valacugi.ui.shell.ShellScreen
 import by.voiteshonok.valacugi.ui.trips.TripConstructorScreen
 
@@ -72,6 +74,7 @@ fun AppNavHost(
                 tripsRepository = appContainer.tripsRepository,
                 usersRepository = appContainer.usersRepository,
                 sessionRepository = appContainer.sessionRepository,
+                threadsRepository = appContainer.threadsRepository,
                 notificationSender = appContainer.notificationSender,
                 onLogout = {
                     appContainer.sessionRepository.clearSession()
@@ -100,6 +103,22 @@ fun AppNavHost(
         }
         composable(route = AppRoutes.TripConstructor) {
             TripConstructorScreen()
+        }
+        composable(
+            route = AppRoutes.Chat,
+            arguments = listOf(
+                navArgument(AppRouteArguments.ThreadId) { type = NavType.StringType }
+            )
+        ) { backStackEntry ->
+            val threadId: String = backStackEntry.arguments?.getString(AppRouteArguments.ThreadId).orEmpty()
+            ChatScreen(
+                threadId = threadId,
+                onNavigateBack = { navController.popBackStack() },
+                viewModelFactory = ChatViewModelFactory(
+                    threadId = threadId,
+                    threadsRepository = appContainer.threadsRepository
+                )
+            )
         }
     }
 }

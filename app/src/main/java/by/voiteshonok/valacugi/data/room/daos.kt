@@ -55,6 +55,9 @@ interface TripsDao {
     @Query("SELECT COUNT(*) FROM trips")
     suspend fun getTripsCount(): Int
 
+    @Query("SELECT * FROM trips ORDER BY title ASC")
+    suspend fun getAllTrips(): List<TripEntity>
+
     @Query(
         """
         SELECT trips.*,
@@ -100,5 +103,30 @@ interface TripsDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertSteps(steps: List<ItineraryStepEntity>)
+}
+
+@Dao
+interface ThreadsDao {
+    @Query("SELECT * FROM threads ORDER BY last_message_at DESC")
+    fun observeThreads(): Flow<List<ThreadEntity>>
+
+    @Query(
+        """
+        SELECT threads.* FROM threads
+        INNER JOIN trip_assignments ON trip_assignments.trip_id = threads.trip_id
+        WHERE trip_assignments.person_id = :userId
+        ORDER BY threads.last_message_at DESC
+        """
+    )
+    fun observeThreadsForUser(userId: String): Flow<List<ThreadEntity>>
+
+    @Query("SELECT * FROM threads WHERE thread_id = :threadId LIMIT 1")
+    fun observeThread(threadId: String): Flow<ThreadEntity?>
+
+    @Query("SELECT COUNT(*) FROM threads")
+    suspend fun getThreadsCount(): Int
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(threads: List<ThreadEntity>)
 }
 

@@ -33,6 +33,15 @@ data class ItineraryStep(
     val maxPeople: Int?
 )
 
+data class MessageThread(
+    val id: String,
+    val tripId: String,
+    val title: String,
+    val lastMessagePreview: String,
+    val lastMessageAt: String,
+    val hasUnread: Boolean
+)
+
 data class TripItinerary(
     val trip: Trip,
     val days: List<ItineraryDayWithSteps>

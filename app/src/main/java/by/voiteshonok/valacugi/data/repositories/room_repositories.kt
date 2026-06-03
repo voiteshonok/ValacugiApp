@@ -1,10 +1,13 @@
 package by.voiteshonok.valacugi.data.repositories
 
 import by.voiteshonok.valacugi.data.toDomain
+import by.voiteshonok.valacugi.data.room.ThreadsDao
 import by.voiteshonok.valacugi.data.room.TripAssignmentEntity
 import by.voiteshonok.valacugi.data.room.TripsDao
 import by.voiteshonok.valacugi.data.room.UsersDao
 import by.voiteshonok.valacugi.domain.ItineraryDayWithSteps
+import by.voiteshonok.valacugi.domain.MessageThread
+import by.voiteshonok.valacugi.domain.ThreadsRepository
 import by.voiteshonok.valacugi.domain.TripItinerary
 import by.voiteshonok.valacugi.domain.TripsRepository
 import by.voiteshonok.valacugi.domain.UsersRepository
@@ -29,6 +32,22 @@ class RoomUsersRepository(
     }
     override suspend fun setPushNotificationsEnabled(userId: String, isEnabled: Boolean) {
         usersDao.updatePushNotificationsEnabled(userId = userId, isEnabled = isEnabled)
+    }
+}
+
+class RoomThreadsRepository(
+    private val threadsDao: ThreadsDao
+) : ThreadsRepository {
+    override fun observeThreads(): Flow<List<MessageThread>> {
+        return threadsDao.observeThreads().map { entities -> entities.map { it.toDomain() } }
+    }
+
+    override fun observeThreadsForUser(userId: String): Flow<List<MessageThread>> {
+        return threadsDao.observeThreadsForUser(userId = userId).map { entities -> entities.map { it.toDomain() } }
+    }
+
+    override fun observeThread(threadId: String): Flow<MessageThread?> {
+        return threadsDao.observeThread(threadId = threadId).map { entity -> entity?.toDomain() }
     }
 }
 

@@ -39,9 +39,11 @@ import androidx.navigation.compose.rememberNavController
 import by.voiteshonok.valacugi.core.navigation.AppRoutes
 import by.voiteshonok.valacugi.core.notifications.ValacugiNotificationSender
 import by.voiteshonok.valacugi.core.session.SessionRepository
+import by.voiteshonok.valacugi.domain.ThreadsRepository
 import by.voiteshonok.valacugi.domain.TripsRepository
 import by.voiteshonok.valacugi.domain.UsersRepository
 import by.voiteshonok.valacugi.ui.directory.DirectoryScreen
+import by.voiteshonok.valacugi.ui.directory.DirectoryViewModelFactory
 import by.voiteshonok.valacugi.ui.identity.IdentityScreen
 import by.voiteshonok.valacugi.ui.identity.IdentityViewModelFactory
 import by.voiteshonok.valacugi.ui.theme.AtlasOnPrimary
@@ -55,6 +57,7 @@ fun ShellScreen(
     modifier: Modifier = Modifier,
     rootNavController: NavHostController,
     tripsRepository: TripsRepository,
+    threadsRepository: ThreadsRepository,
     usersRepository: UsersRepository,
     sessionRepository: SessionRepository,
     notificationSender: ValacugiNotificationSender,
@@ -121,8 +124,12 @@ fun ShellScreen(
             }
             composable(route = AppRoutes.Directory) {
                 DirectoryScreen(
-                    onOpenThread = { threadId: String ->
-                        rootNavController.navigate("transmission/$threadId")
+                    viewModelFactory = DirectoryViewModelFactory(
+                        threadsRepository = threadsRepository,
+                        sessionRepository = sessionRepository
+                    ),
+                    onOpenChat = { threadId: String ->
+                        rootNavController.navigate("chat/$threadId")
                     }
                 )
             }
