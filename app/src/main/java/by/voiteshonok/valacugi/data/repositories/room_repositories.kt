@@ -1,11 +1,18 @@
 package by.voiteshonok.valacugi.data.repositories
 
 import by.voiteshonok.valacugi.data.toDomain
+import by.voiteshonok.valacugi.data.room.MessageEntity
+import by.voiteshonok.valacugi.data.room.MessagesDao
 import by.voiteshonok.valacugi.data.room.ThreadsDao
+import by.voiteshonok.valacugi.data.room.createMessageId
+import by.voiteshonok.valacugi.data.room.createSentAtIsoTimestamp
+import by.voiteshonok.valacugi.data.room.truncateMessagePreview
 import by.voiteshonok.valacugi.data.room.TripAssignmentEntity
 import by.voiteshonok.valacugi.data.room.TripsDao
 import by.voiteshonok.valacugi.data.room.UsersDao
 import by.voiteshonok.valacugi.domain.ItineraryDayWithSteps
+import by.voiteshonok.valacugi.domain.Message
+import by.voiteshonok.valacugi.domain.MessagesRepository
 import by.voiteshonok.valacugi.domain.MessageThread
 import by.voiteshonok.valacugi.domain.ThreadsRepository
 import by.voiteshonok.valacugi.domain.TripItinerary
@@ -32,6 +39,39 @@ class RoomUsersRepository(
     }
     override suspend fun setPushNotificationsEnabled(userId: String, isEnabled: Boolean) {
         usersDao.updatePushNotificationsEnabled(userId = userId, isEnabled = isEnabled)
+    }
+}
+
+class RoomMessagesRepository(
+    private val messagesDao: MessagesDao,
+    private val threadsDao: ThreadsDao
+) : MessagesRepository {
+    override fun observeMessages(threadId: String): Flow<List<Message>> {
+        return messagesDao.observeMessages(threadId = threadId).map { entities ->
+            entities.map { entity -> entity.toDomain() }
+        }
+    }
+
+    override suspend fun sendMessage(threadId: String, senderId: String, body: String) {
+        val trimmedBody: String = body.trim()
+        if (trimmedBody.isEmpty()) {
+            return
+        }
+        val sentAt: String = createSentAtIsoTimestamp()
+        val messageEntity: MessageEntity = MessageEntity(
+            messageId = createMessageId(threadId = threadId),
+            threadId = threadId,
+            senderId = senderId,
+            body = trimmedBody,
+            sentAt = sentAt
+        )
+        messagesDao.insertMessage(message = messageEntity)
+        threadsDao.updateLastMessage(
+            threadId = threadId,
+            preview = truncateMessagePreview(body = trimmedBody),
+            sentAt = sentAt,
+            hasUnread = false
+        )
     }
 }
 

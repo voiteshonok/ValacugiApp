@@ -17,15 +17,17 @@ private const val DatabaseName: String = "valacugi.db"
         TripAssignmentEntity::class,
         ItineraryDayEntity::class,
         ItineraryStepEntity::class,
-        ThreadEntity::class
+        ThreadEntity::class,
+        MessageEntity::class
     ],
-    version = 9,
+    version = 10,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun usersDao(): UsersDao
     abstract fun tripsDao(): TripsDao
     abstract fun threadsDao(): ThreadsDao
+    abstract fun messagesDao(): MessagesDao
 
     companion object {
         fun create(context: Context): AppDatabase {
@@ -59,6 +61,15 @@ private object ValacugiSeeder {
             )
         )
         ensureThreadsSeeded(database = database)
+        ensureHanoiMessagesSeeded(database = database)
+    }
+
+    private suspend fun ensureHanoiMessagesSeeded(database: AppDatabase) {
+        val messageCount: Int = database.messagesDao().getMessageCountForThread(threadId = HanoiThreadId)
+        if (messageCount > 0) {
+            return
+        }
+        database.messagesDao().insertAll(messages = buildHanoiThreadMessages())
     }
 
     private suspend fun ensureThreadsSeeded(database: AppDatabase) {
@@ -250,6 +261,7 @@ private object ValacugiSeeder {
         database.tripsDao().insertDays(itineraryDays)
         database.tripsDao().insertSteps(itinerarySteps)
         database.threadsDao().insertAll(threads = buildThreadsForTrips(trips = trips))
+        database.messagesDao().insertAll(messages = buildHanoiThreadMessages())
     }
 }
 

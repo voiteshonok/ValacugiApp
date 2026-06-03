@@ -2,12 +2,14 @@ package by.voiteshonok.valacugi.data
 
 import by.voiteshonok.valacugi.data.room.ItineraryDayEntity
 import by.voiteshonok.valacugi.data.room.ItineraryStepEntity
+import by.voiteshonok.valacugi.data.room.MessageEntity
 import by.voiteshonok.valacugi.data.room.ThreadEntity
 import by.voiteshonok.valacugi.data.room.TripEntity
 import by.voiteshonok.valacugi.data.room.TripWithAssignedCountEntity
 import by.voiteshonok.valacugi.data.room.UserEntity
 import by.voiteshonok.valacugi.domain.ItineraryDay
 import by.voiteshonok.valacugi.domain.ItineraryStep
+import by.voiteshonok.valacugi.domain.Message
 import by.voiteshonok.valacugi.domain.MessageThread
 import by.voiteshonok.valacugi.domain.Trip
 import by.voiteshonok.valacugi.domain.User
@@ -18,6 +20,16 @@ fun UserEntity.toDomain(): User {
         login = login,
         displayName = displayName,
         isPushNotificationsEnabled = pushNotificationsEnabled
+    )
+}
+
+fun MessageEntity.toDomain(): Message {
+    return Message(
+        id = messageId,
+        threadId = threadId,
+        senderId = senderId,
+        body = body,
+        sentAt = sentAt
     )
 }
 

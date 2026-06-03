@@ -42,6 +42,14 @@ data class MessageThread(
     val hasUnread: Boolean
 )
 
+data class Message(
+    val id: String,
+    val threadId: String,
+    val senderId: String,
+    val body: String,
+    val sentAt: String
+)
+
 data class TripItinerary(
     val trip: Trip,
     val days: List<ItineraryDayWithSteps>

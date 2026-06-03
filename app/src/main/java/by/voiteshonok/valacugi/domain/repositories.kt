@@ -15,6 +15,11 @@ interface ThreadsRepository {
     fun observeThread(threadId: String): Flow<MessageThread?>
 }
 
+interface MessagesRepository {
+    fun observeMessages(threadId: String): Flow<List<Message>>
+    suspend fun sendMessage(threadId: String, senderId: String, body: String)
+}
+
 interface TripsRepository {
     fun observeTrips(): Flow<List<Trip>>
     fun observeTripItinerary(tripId: String): Flow<TripItinerary?>

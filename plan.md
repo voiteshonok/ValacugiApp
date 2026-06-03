@@ -68,7 +68,7 @@ isProject: false
 - `TripEntity(tripId, title, dateStart, dateEnd, pax, budgetText, assignedCount, assignedTotal, referenceCode, coordsText)`
 - `ItineraryDayEntity(dayId, tripId, dayIndex, tag, title, description)`
 - `ItineraryStepEntity(stepId, dayId, title, timeText)` (optional)
-- `ThreadEntity(threadId, tripId, title, lastMessagePreview, lastMessageAt, hasUnread)`
+- `ThreadEntity(threadId, tripId, title, lastMessagePreview, lastMessageAt, hasUnread)` , lastMessagePreview, lastMessageAt, hasUnread - should be in another logic/table
 - `MessageEntity(messageId, threadId, senderId, body, sentAt, isMine)`
 - `SettingsEntity(userId, isPushNotifsEnabled)` (and more later)
 - `SessionEntity(userId, email)` (or store in `DataStore` later)

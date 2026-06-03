@@ -116,7 +116,9 @@ fun AppNavHost(
                 onNavigateBack = { navController.popBackStack() },
                 viewModelFactory = ChatViewModelFactory(
                     threadId = threadId,
-                    threadsRepository = appContainer.threadsRepository
+                    threadsRepository = appContainer.threadsRepository,
+                    messagesRepository = appContainer.messagesRepository,
+                    sessionRepository = appContainer.sessionRepository
                 )
             )
         }

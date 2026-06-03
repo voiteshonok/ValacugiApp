@@ -128,5 +128,36 @@ interface ThreadsDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(threads: List<ThreadEntity>)
+
+    @Query(
+        """
+        UPDATE threads
+        SET last_message_preview = :preview,
+            last_message_at = :sentAt,
+            has_unread = :hasUnread
+        WHERE thread_id = :threadId
+        """
+    )
+    suspend fun updateLastMessage(
+        threadId: String,
+        preview: String,
+        sentAt: String,
+        hasUnread: Boolean
+    )
+}
+
+@Dao
+interface MessagesDao {
+    @Query("SELECT * FROM messages WHERE thread_id = :threadId ORDER BY sent_at ASC")
+    fun observeMessages(threadId: String): Flow<List<MessageEntity>>
+
+    @Query("SELECT COUNT(*) FROM messages WHERE thread_id = :threadId")
+    suspend fun getMessageCountForThread(threadId: String): Int
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(messages: List<MessageEntity>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertMessage(message: MessageEntity)
 }
 

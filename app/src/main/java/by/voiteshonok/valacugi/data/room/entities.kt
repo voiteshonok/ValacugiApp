@@ -77,6 +77,41 @@ data class ThreadEntity(
 )
 
 @Entity(
+    tableName = "messages",
+    foreignKeys = [
+        ForeignKey(
+            entity = ThreadEntity::class,
+            parentColumns = ["thread_id"],
+            childColumns = ["thread_id"],
+            onDelete = ForeignKey.CASCADE
+        ),
+        ForeignKey(
+            entity = UserEntity::class,
+            parentColumns = ["user_id"],
+            childColumns = ["sender_id"],
+            onDelete = ForeignKey.CASCADE
+        )
+    ],
+    indices = [
+        Index(value = ["thread_id"]),
+        Index(value = ["sender_id"])
+    ]
+)
+data class MessageEntity(
+    @PrimaryKey
+    @ColumnInfo(name = "message_id")
+    val messageId: String,
+    @ColumnInfo(name = "thread_id")
+    val threadId: String,
+    @ColumnInfo(name = "sender_id")
+    val senderId: String,
+    @ColumnInfo(name = "body")
+    val body: String,
+    @ColumnInfo(name = "sent_at")
+    val sentAt: String
+)
+
+@Entity(
     tableName = "trip_assignments",
     primaryKeys = ["trip_id", "person_id"],
     foreignKeys = [
