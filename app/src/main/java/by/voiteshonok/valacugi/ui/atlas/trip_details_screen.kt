@@ -1,6 +1,8 @@
 package by.voiteshonok.valacugi.ui.atlas
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -27,11 +29,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import by.voiteshonok.valacugi.core.trip_creation.TripCreationDraft
+import by.voiteshonok.valacugi.core.trip_creation.TripStepDraft
 import by.voiteshonok.valacugi.domain.ItineraryDayWithSteps
 import by.voiteshonok.valacugi.domain.ItineraryStep
 import by.voiteshonok.valacugi.domain.Trip
@@ -41,7 +46,9 @@ import by.voiteshonok.valacugi.ui.trips.TripDisplayFormatter
 @Composable
 fun TripDetailsScreen(
     modifier: Modifier = Modifier,
-    viewModelFactory: ViewModelProvider.Factory
+    viewModelFactory: ViewModelProvider.Factory,
+    onEditTrip: (TripCreationDraft, List<TripStepDraft>) -> Unit = { _, _ -> },
+    onRemoveTrip: () -> Unit = {}
 ) {
     val viewModel: TripDetailsViewModel = viewModel(factory = viewModelFactory)
     val uiState: TripDetailsUiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -77,6 +84,21 @@ fun TripDetailsScreen(
                     label = uiState.membershipButtonLabel,
                     isEnabled = !uiState.isMembershipActionInProgress,
                     onClick = viewModel::onMembershipButtonClick
+                )
+            }
+        }
+        if (uiState.canManageCreatedTrip) {
+            item {
+                TripCreatorActionsRow(
+                    isEnabled = !uiState.isCreatorActionInProgress,
+                    onEditClick = {
+                        val editDraft: TripCreationDraft = viewModel.buildEditDraft() ?: return@TripCreatorActionsRow
+                        val editSteps: List<TripStepDraft> = viewModel.buildEditSteps()
+                        onEditTrip(editDraft, editSteps)
+                    },
+                    onRemoveClick = {
+                        viewModel.removeCreatedTrip(onSuccess = onRemoveTrip)
+                    }
                 )
             }
         }
@@ -128,6 +150,54 @@ private fun TripDetailsHeader(trip: Trip) {
                 fontWeight = FontWeight.Normal,
                 fontSize = 14.sp,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        )
+    }
+}
+
+@Composable
+private fun TripCreatorActionsRow(
+    isEnabled: Boolean,
+    onEditClick: () -> Unit,
+    onRemoveClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .border(width = 1.dp, color = MaterialTheme.colorScheme.primary)
+    ) {
+        Text(
+            text = "EDIT",
+            modifier = Modifier
+                .weight(1f)
+                .background(MaterialTheme.colorScheme.primary)
+                .clickable(enabled = isEnabled, onClick = onEditClick)
+                .padding(vertical = 16.dp),
+            textAlign = TextAlign.Center,
+            style = TextStyle(
+                fontFamily = FontFamily.Monospace,
+                fontWeight = FontWeight.Medium,
+                fontSize = 14.sp,
+                letterSpacing = 1.sp,
+                color = MaterialTheme.colorScheme.onPrimary
+            )
+        )
+        Text(
+            text = "REMOVE",
+            modifier = Modifier
+                .weight(1f)
+                .border(width = 1.dp, color = MaterialTheme.colorScheme.primary)
+                .clickable(enabled = isEnabled, onClick = onRemoveClick)
+                .padding(vertical = 16.dp),
+            textAlign = TextAlign.Center,
+            style = TextStyle(
+                fontFamily = FontFamily.Monospace,
+                fontWeight = FontWeight.Medium,
+                fontSize = 14.sp,
+                letterSpacing = 1.sp,
+                color = MaterialTheme.colorScheme.primary
             )
         )
     }

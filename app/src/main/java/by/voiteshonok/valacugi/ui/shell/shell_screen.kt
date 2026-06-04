@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import by.voiteshonok.valacugi.core.navigation.AppRoutes
+import by.voiteshonok.valacugi.core.trip_creation.TripCreationDraftStore
 import by.voiteshonok.valacugi.core.notifications.ValacugiNotificationSender
 import by.voiteshonok.valacugi.core.session.SessionRepository
 import by.voiteshonok.valacugi.domain.ThreadsRepository
@@ -143,6 +144,7 @@ fun ShellScreen(
                             rootNavController.navigate("atlas/$tripId")
                         },
                         onOpenTripConstructor = {
+                            TripCreationDraftStore.clearDraft()
                             rootNavController.navigate(AppRoutes.TripInitialization)
                         },
                         viewModelFactory = TripsViewModelFactory(tripsRepository = tripsRepository)

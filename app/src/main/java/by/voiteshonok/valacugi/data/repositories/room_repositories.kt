@@ -3,7 +3,10 @@ package by.voiteshonok.valacugi.data.repositories
 import by.voiteshonok.valacugi.core.trip_creation.TripCreationDraft
 import by.voiteshonok.valacugi.core.trip_creation.TripStepDraft
 import by.voiteshonok.valacugi.data.PersistedTripBundle
+import by.voiteshonok.valacugi.data.mapDraftToItineraryEntities
 import by.voiteshonok.valacugi.data.mapDraftToPersistedTripBundle
+import by.voiteshonok.valacugi.data.mapDraftToTripEntityForUpdate
+import by.voiteshonok.valacugi.data.resolveTripTitle
 import by.voiteshonok.valacugi.data.toDomain
 import by.voiteshonok.valacugi.data.room.LastReadMessageEntity
 import by.voiteshonok.valacugi.data.room.LastReadMessagesDao
@@ -186,6 +189,32 @@ class RoomTripsRepository(
         }
         tripsDao.insertAssignments(assignments = bundle.assignments)
         threadsDao.insertAll(threads = listOf(bundle.thread))
+    }
+
+    override suspend fun updateTripFromDraft(
+        draft: TripCreationDraft,
+        steps: List<TripStepDraft>
+    ) {
+        val tripId: String = draft.editingTripId ?: return
+        val existingTrip: TripEntity = tripsDao.getTripEntity(tripId = tripId) ?: return
+        val updatedTrip: TripEntity = mapDraftToTripEntityForUpdate(
+            draft = draft,
+            createdByUserId = existingTrip.createdById
+        )
+        tripsDao.updateTrip(trip = updatedTrip)
+        tripsDao.deleteItineraryForTrip(tripId = tripId)
+        val itineraryEntities: Pair<by.voiteshonok.valacugi.data.room.ItineraryDayEntity, List<by.voiteshonok.valacugi.data.room.ItineraryStepEntity>> =
+            mapDraftToItineraryEntities(tripId = tripId, steps = steps)
+        tripsDao.insertDays(days = listOf(itineraryEntities.first))
+        if (itineraryEntities.second.isNotEmpty()) {
+            tripsDao.insertSteps(steps = itineraryEntities.second)
+        }
+        val threadTitle: String = "${resolveTripTitle(location = draft.location)} TRIP"
+        threadsDao.updateThreadTitleForTrip(tripId = tripId, title = threadTitle)
+    }
+
+    override suspend fun deleteTrip(tripId: String) {
+        tripsDao.deleteTrip(tripId = tripId)
     }
 }
 

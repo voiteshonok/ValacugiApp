@@ -9,8 +9,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -35,14 +35,23 @@ import by.voiteshonok.valacugi.ui.theme.AtlasOnSurfaceVariant
 @Composable
 fun TripInitializationScreen(
     modifier: Modifier = Modifier,
+    initialDraft: TripCreationDraft? = null,
     onNavigateBack: () -> Unit,
-    onInitializeTrip: (TripCreationDraft) -> Unit
+    onContinueTrip: (TripCreationDraft) -> Unit
 ) {
-    var location: String by remember { mutableStateOf("") }
-    var dateRangeText: String by remember { mutableStateOf("") }
-    var pax: String by remember { mutableStateOf("") }
-    var budget: String by remember { mutableStateOf("") }
-    var roster: String by remember { mutableStateOf("") }
+    val isEditMode: Boolean = initialDraft?.isEditMode == true
+    var location: String by remember(initialDraft) { mutableStateOf(initialDraft?.location.orEmpty()) }
+    var dateRangeText: String by remember(initialDraft) { mutableStateOf(initialDraft?.dateRangeText.orEmpty()) }
+    var pax: String by remember(initialDraft) { mutableStateOf(initialDraft?.pax.orEmpty()) }
+    var budget: String by remember(initialDraft) { mutableStateOf(initialDraft?.budget.orEmpty()) }
+    var roster: String by remember(initialDraft) { mutableStateOf(initialDraft?.roster.orEmpty()) }
+    val screenTitle: String = if (isEditMode) "EDIT EXPEDITION" else "NEW EXPEDITION"
+    val expeditionIdLabel: String = if (isEditMode) {
+        "[ ID: ${initialDraft?.expeditionId.orEmpty()} ]"
+    } else {
+        "[ ID: PENDING_GEN ]"
+    }
+    val continueButtonLabel: String = if (isEditMode) "UPDATE TRIP ->" else "INITIALIZE TRIP ->"
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -66,7 +75,7 @@ fun TripInitializationScreen(
                     .padding(horizontal = 16.dp, vertical = 20.dp)
             ) {
                 Text(
-                    text = "NEW EXPEDITION",
+                    text = screenTitle,
                     style = TextStyle(
                         fontFamily = FontFamily.SansSerif,
                         fontWeight = FontWeight.Bold,
@@ -76,7 +85,7 @@ fun TripInitializationScreen(
                     )
                 )
                 Text(
-                    text = "[ ID: PENDING_GEN ]",
+                    text = expeditionIdLabel,
                     modifier = Modifier.padding(top = 8.dp),
                     style = TextStyle(
                         fontFamily = FontFamily.Monospace,
@@ -128,21 +137,27 @@ fun TripInitializationScreen(
                 .fillMaxWidth()
                 .background(MaterialTheme.colorScheme.primary)
                 .clickable {
+                    val expeditionId: String = if (isEditMode) {
+                        initialDraft?.expeditionId.orEmpty()
+                    } else {
+                        generateExpeditionId()
+                    }
                     val draft: TripCreationDraft = TripCreationDraft(
-                        expeditionId = generateExpeditionId(),
+                        expeditionId = expeditionId,
                         location = location,
                         dateRangeText = dateRangeText,
                         pax = pax,
                         budget = budget,
-                        roster = roster
+                        roster = roster,
+                        editingTripId = initialDraft?.editingTripId
                     )
-                    onInitializeTrip(draft)
+                    onContinueTrip(draft)
                 }
                 .padding(vertical = 18.dp),
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = "INITIALIZE TRIP ->",
+                text = continueButtonLabel,
                 style = TextStyle(
                     fontFamily = FontFamily.Monospace,
                     fontWeight = FontWeight.Medium,

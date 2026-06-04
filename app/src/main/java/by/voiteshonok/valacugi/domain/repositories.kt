@@ -34,5 +34,10 @@ interface TripsRepository {
         steps: List<TripStepDraft>,
         createdByUserId: String
     )
+    suspend fun updateTripFromDraft(
+        draft: TripCreationDraft,
+        steps: List<TripStepDraft>
+    )
+    suspend fun deleteTrip(tripId: String)
 }
 

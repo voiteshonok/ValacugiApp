@@ -58,6 +58,9 @@ interface TripsDao {
     @Query("SELECT * FROM trips WHERE trip_id = :tripId LIMIT 1")
     fun observeTripEntity(tripId: String): Flow<TripEntity?>
 
+    @Query("SELECT * FROM trips WHERE trip_id = :tripId LIMIT 1")
+    suspend fun getTripEntity(tripId: String): TripEntity?
+
     @Query("SELECT * FROM trip_assignments")
     fun observeTripAssignments(): Flow<List<TripAssignmentEntity>>
 
@@ -87,6 +90,15 @@ interface TripsDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTrips(trips: List<TripEntity>)
+
+    @androidx.room.Update
+    suspend fun updateTrip(trip: TripEntity)
+
+    @Query("DELETE FROM trips WHERE trip_id = :tripId")
+    suspend fun deleteTrip(tripId: String)
+
+    @Query("DELETE FROM itinerary_days WHERE trip_id = :tripId")
+    suspend fun deleteItineraryForTrip(tripId: String)
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertAssignments(assignments: List<TripAssignmentEntity>)
@@ -165,6 +177,15 @@ interface ThreadsDao {
         preview: String,
         sentAt: String
     )
+
+    @Query(
+        """
+        UPDATE threads
+        SET title = :title
+        WHERE trip_id = :tripId
+        """
+    )
+    suspend fun updateThreadTitleForTrip(tripId: String, title: String)
 }
 
 @Dao

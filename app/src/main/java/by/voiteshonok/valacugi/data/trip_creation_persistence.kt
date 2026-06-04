@@ -8,6 +8,9 @@ import by.voiteshonok.valacugi.data.room.ThreadEntity
 import by.voiteshonok.valacugi.data.room.TripAssignmentEntity
 import by.voiteshonok.valacugi.data.room.TripEntity
 import by.voiteshonok.valacugi.data.room.createSentAtIsoTimestamp
+import by.voiteshonok.valacugi.domain.ItineraryStep
+import by.voiteshonok.valacugi.domain.Trip
+import by.voiteshonok.valacugi.domain.TripItinerary
 import java.util.UUID
 
 data class PersistedTripBundle(
@@ -23,7 +26,7 @@ fun mapDraftToPersistedTripBundle(
     steps: List<TripStepDraft>,
     createdByUserId: String
 ): PersistedTripBundle {
-    val tripId: String = createTripIdFromLocation(location = draft.location)
+    val tripId: String = draft.editingTripId ?: createTripIdFromLocation(location = draft.location)
     val tripTitle: String = resolveTripTitle(location = draft.location)
     val dateRange: Pair<String?, String?> = parseDateRange(dateRangeText = draft.dateRangeText)
     val tripEntity: TripEntity = TripEntity(
@@ -49,7 +52,7 @@ fun mapDraftToPersistedTripBundle(
             stepIndex = step.index,
             title = step.title,
             timeText = step.timeOffset,
-            budgetText = "${step.coordinates} · ${step.actionType}",
+            budgetText = formatStepBudgetText(coordinates = step.coordinates, actionType = step.actionType),
             maxPeople = null
         )
     }
@@ -71,6 +74,112 @@ fun mapDraftToPersistedTripBundle(
         assignments = assignments
     )
 }
+
+fun mapDraftToTripEntityForUpdate(
+    draft: TripCreationDraft,
+    createdByUserId: String
+): TripEntity {
+    val tripId: String = draft.editingTripId ?: error("editingTripId is required for update")
+    val dateRange: Pair<String?, String?> = parseDateRange(dateRangeText = draft.dateRangeText)
+    return TripEntity(
+        tripId = tripId,
+        title = resolveTripTitle(location = draft.location),
+        dateStart = dateRange.first,
+        dateEnd = dateRange.second,
+        pax = parsePax(paxText = draft.pax),
+        budgetText = draft.budget.trim().ifEmpty { null },
+        createdById = createdByUserId
+    )
+}
+
+fun mapDraftToItineraryEntities(
+    tripId: String,
+    steps: List<TripStepDraft>
+): Pair<ItineraryDayEntity, List<ItineraryStepEntity>> {
+    val dayId: String = "day_${tripId}_01"
+    val dayEntity: ItineraryDayEntity = ItineraryDayEntity(
+        dayId = dayId,
+        tripId = tripId,
+        dayIndex = 1,
+        title = "DAY 01 — ACTIVE SEQUENCE"
+    )
+    val stepEntities: List<ItineraryStepEntity> = steps.map { step: TripStepDraft ->
+        ItineraryStepEntity(
+            stepId = "step_${tripId}_${step.index}",
+            dayId = dayId,
+            stepIndex = step.index,
+            title = step.title,
+            timeText = step.timeOffset,
+            budgetText = formatStepBudgetText(coordinates = step.coordinates, actionType = step.actionType),
+            maxPeople = null
+        )
+    }
+    return dayEntity to stepEntities
+}
+
+fun mapTripItineraryToCreationDraft(itinerary: TripItinerary): TripCreationDraft {
+    val trip: Trip = itinerary.trip
+    return TripCreationDraft(
+        expeditionId = trip.id.uppercase(),
+        location = trip.title,
+        dateRangeText = formatDateRangeForDraft(dateStart = trip.dateStart, dateEnd = trip.dateEnd),
+        pax = formatPaxForDraft(pax = trip.pax),
+        budget = trip.budgetText.orEmpty(),
+        roster = "",
+        editingTripId = trip.id
+    )
+}
+
+fun mapItineraryStepsToDrafts(itinerary: TripItinerary): List<TripStepDraft> {
+    return itinerary.days
+        .flatMap { dayWithSteps -> dayWithSteps.steps }
+        .sortedBy { step: ItineraryStep -> step.stepIndex }
+        .map { step: ItineraryStep ->
+            val parsedStepDetails: Pair<String, String> = parseStepBudgetText(budgetText = step.budgetText)
+            TripStepDraft(
+                index = step.stepIndex,
+                title = step.title,
+                coordinates = parsedStepDetails.first,
+                timeOffset = step.timeText ?: "+00:00 HR",
+                actionType = parsedStepDetails.second
+            )
+        }
+}
+
+fun formatDateRangeForDraft(dateStart: String?, dateEnd: String?): String {
+    val startLabel: String = dateStart?.trim()?.takeIf { value: String -> value.isNotEmpty() } ?: "[ ? ]"
+    val endLabel: String = dateEnd?.trim()?.takeIf { value: String -> value.isNotEmpty() } ?: "[ ? ]"
+    return "$startLabel - $endLabel"
+}
+
+fun formatPaxForDraft(pax: Int?): String {
+    if (pax == null) {
+        return ""
+    }
+    return pax.toString()
+}
+
+fun formatStepBudgetText(coordinates: String, actionType: String): String {
+    return "${coordinates.trim()} · ${actionType.trim()}"
+}
+
+fun parseStepBudgetText(budgetText: String?): Pair<String, String> {
+    if (budgetText.isNullOrBlank()) {
+        return "[ ? ]" to StepActionTypesDefault.first()
+    }
+    val parts: List<String> = budgetText.split(" · ").map { part: String -> part.trim() }
+    if (parts.size < 2) {
+        return budgetText to StepActionTypesDefault.first()
+    }
+    return parts.first() to parts.last()
+}
+
+private val StepActionTypesDefault: List<String> = listOf(
+    "Transit",
+    "Deployment",
+    "Logistics",
+    "Standby"
+)
 
 fun createTripIdFromLocation(location: String): String {
     val slug: String = location

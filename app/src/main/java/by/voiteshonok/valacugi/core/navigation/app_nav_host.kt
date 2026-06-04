@@ -20,7 +20,9 @@ import by.voiteshonok.valacugi.ui.boot.BootScreen
 import by.voiteshonok.valacugi.ui.chat.ChatScreen
 import by.voiteshonok.valacugi.ui.chat.ChatViewModelFactory
 import by.voiteshonok.valacugi.ui.shell.ShellScreen
+import by.voiteshonok.valacugi.core.trip_creation.TripCreationDraft
 import by.voiteshonok.valacugi.core.trip_creation.TripCreationDraftStore
+import by.voiteshonok.valacugi.core.trip_creation.TripStepDraft
 import by.voiteshonok.valacugi.ui.trips.TripConstructorScreen
 import by.voiteshonok.valacugi.ui.trips.TripConstructorViewModelFactory
 import by.voiteshonok.valacugi.ui.trips.TripInitializationScreen
@@ -102,14 +104,28 @@ fun AppNavHost(
                     getTripDetails = GetTripDetails(tripsRepository = appContainer.tripsRepository),
                     tripsRepository = appContainer.tripsRepository,
                     sessionRepository = appContainer.sessionRepository
-                )
+                ),
+                onEditTrip = { editDraft, editSteps ->
+                    TripCreationDraftStore.saveDraftForEdit(draft = editDraft, steps = editSteps)
+                    navController.navigate(AppRoutes.TripInitialization) {
+                        launchSingleTop = true
+                    }
+                },
+                onRemoveTrip = {
+                    navController.popBackStack()
+                }
             )
         }
         composable(route = AppRoutes.TripInitialization) {
+            val initialDraft: TripCreationDraft? = TripCreationDraftStore.currentDraft
             TripInitializationScreen(
+                initialDraft = initialDraft,
                 onNavigateBack = { navController.popBackStack() },
-                onInitializeTrip = { draft ->
+                onContinueTrip = { draft ->
                     TripCreationDraftStore.saveDraft(draft = draft)
+                    if (!draft.isEditMode) {
+                        TripCreationDraftStore.pendingConstructorSteps = emptyList()
+                    }
                     navController.navigate(AppRoutes.TripConstructor) {
                         launchSingleTop = true
                     }
@@ -126,8 +142,10 @@ fun AppNavHost(
                     )
                 }
             } else {
+                val initialSteps: List<TripStepDraft> = TripCreationDraftStore.pendingConstructorSteps
                 TripConstructorScreen(
                     draft = draft,
+                    initialSteps = initialSteps,
                     onNavigateBack = { navController.popBackStack() },
                     onFinished = {
                         navController.popBackStack(

@@ -4,6 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import by.voiteshonok.valacugi.core.session.SessionRepository
+import by.voiteshonok.valacugi.core.trip_creation.TripCreationDraft
+import by.voiteshonok.valacugi.core.trip_creation.TripStepDraft
+import by.voiteshonok.valacugi.data.mapItineraryStepsToDrafts
+import by.voiteshonok.valacugi.data.mapTripItineraryToCreationDraft
 import by.voiteshonok.valacugi.domain.GetTripDetails
 import by.voiteshonok.valacugi.domain.TripItinerary
 import by.voiteshonok.valacugi.domain.TripsRepository
@@ -30,6 +34,28 @@ class TripDetailsViewModel(
 
     init {
         observeTrip()
+    }
+
+    fun buildEditDraft(): TripCreationDraft? {
+        val itinerary: TripItinerary = _uiState.value.itinerary ?: return null
+        return mapTripItineraryToCreationDraft(itinerary = itinerary)
+    }
+
+    fun buildEditSteps(): List<TripStepDraft> {
+        val itinerary: TripItinerary = _uiState.value.itinerary ?: return emptyList()
+        return mapItineraryStepsToDrafts(itinerary = itinerary)
+    }
+
+    fun removeCreatedTrip(onSuccess: () -> Unit) {
+        if (_uiState.value.isCreatorActionInProgress) {
+            return
+        }
+        viewModelScope.launch {
+            _uiState.update { previousState -> previousState.copy(isCreatorActionInProgress = true) }
+            tripsRepository.deleteTrip(tripId = tripId)
+            _uiState.update { previousState -> previousState.copy(isCreatorActionInProgress = false) }
+            onSuccess()
+        }
     }
 
     fun onMembershipButtonClick() {
@@ -81,7 +107,10 @@ class TripDetailsViewModel(
                 }
                 .collect { nextState: TripDetailsUiState ->
                     _uiState.update { previousState ->
-                        nextState.copy(isMembershipActionInProgress = previousState.isMembershipActionInProgress)
+                        nextState.copy(
+                            isMembershipActionInProgress = previousState.isMembershipActionInProgress,
+                            isCreatorActionInProgress = previousState.isCreatorActionInProgress
+                        )
                     }
                 }
         }

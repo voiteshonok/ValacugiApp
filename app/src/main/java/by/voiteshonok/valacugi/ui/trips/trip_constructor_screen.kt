@@ -18,6 +18,7 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -53,6 +54,7 @@ private val StepActionTypes: List<String> = listOf(
 fun TripConstructorScreen(
     draft: TripCreationDraft,
     modifier: Modifier = Modifier,
+    initialSteps: List<TripStepDraft> = emptyList(),
     onNavigateBack: () -> Unit,
     onFinished: () -> Unit,
     viewModelFactory: ViewModelProvider.Factory
@@ -66,6 +68,14 @@ fun TripConstructorScreen(
     var selectedStepListIndex: Int? by remember { mutableStateOf(null) }
     val activeSteps: androidx.compose.runtime.snapshots.SnapshotStateList<TripStepDraft> = remember {
         mutableStateListOf()
+    }
+    var hasLoadedInitialSteps: Boolean by remember { mutableStateOf(false) }
+    LaunchedEffect(initialSteps) {
+        if (!hasLoadedInitialSteps && initialSteps.isNotEmpty()) {
+            activeSteps.clear()
+            activeSteps.addAll(initialSteps)
+            hasLoadedInitialSteps = true
+        }
     }
     val isEditingStep: Boolean = selectedStepListIndex != null
     Column(

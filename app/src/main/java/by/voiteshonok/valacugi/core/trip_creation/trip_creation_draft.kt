@@ -8,8 +8,11 @@ data class TripCreationDraft(
     val dateRangeText: String,
     val pax: String,
     val budget: String,
-    val roster: String
+    val roster: String,
+    val editingTripId: String? = null
 ) {
+    val isEditMode: Boolean
+        get() = !editingTripId.isNullOrBlank()
     val locationHeaderLabel: String
         get() {
             val trimmedLocation: String = location.trim()

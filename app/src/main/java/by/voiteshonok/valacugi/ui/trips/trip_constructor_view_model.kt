@@ -38,11 +38,15 @@ class TripConstructorViewModel(
                 }
                 return@launch
             }
-            tripsRepository.createTripFromDraft(
-                draft = draft,
-                steps = steps,
-                createdByUserId = createdByUserId
-            )
+            if (draft.isEditMode) {
+                tripsRepository.updateTripFromDraft(draft = draft, steps = steps)
+            } else {
+                tripsRepository.createTripFromDraft(
+                    draft = draft,
+                    steps = steps,
+                    createdByUserId = createdByUserId
+                )
+            }
             _uiState.update { previousState -> previousState.copy(isFinalizing = false) }
             onSuccess()
         }
