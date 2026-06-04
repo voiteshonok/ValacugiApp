@@ -71,9 +71,54 @@ data class ThreadEntity(
     @ColumnInfo(name = "last_message_preview")
     val lastMessagePreview: String,
     @ColumnInfo(name = "last_message_at")
-    val lastMessageAt: String,
-    @ColumnInfo(name = "has_unread", defaultValue = "0")
-    val hasUnread: Boolean = false
+    val lastMessageAt: String
+)
+
+data class ThreadWithUnreadEntity(
+    @Embedded
+    val thread: ThreadEntity,
+    @ColumnInfo(name = "has_unread")
+    val hasUnread: Boolean
+)
+
+@Entity(
+    tableName = "last_read_messages",
+    primaryKeys = ["thread_id", "user_id"],
+    foreignKeys = [
+        ForeignKey(
+            entity = ThreadEntity::class,
+            parentColumns = ["thread_id"],
+            childColumns = ["thread_id"],
+            onDelete = ForeignKey.CASCADE
+        ),
+        ForeignKey(
+            entity = UserEntity::class,
+            parentColumns = ["user_id"],
+            childColumns = ["user_id"],
+            onDelete = ForeignKey.CASCADE
+        ),
+        ForeignKey(
+            entity = MessageEntity::class,
+            parentColumns = ["message_id"],
+            childColumns = ["message_id"],
+            onDelete = ForeignKey.CASCADE
+        )
+    ],
+    indices = [
+        Index(value = ["thread_id"]),
+        Index(value = ["user_id"]),
+        Index(value = ["message_id"])
+    ]
+)
+data class LastReadMessageEntity(
+    @ColumnInfo(name = "thread_id")
+    val threadId: String,
+    @ColumnInfo(name = "user_id")
+    val userId: String,
+    @ColumnInfo(name = "message_id")
+    val messageId: String,
+    @ColumnInfo(name = "seen_at")
+    val seenAt: String
 )
 
 @Entity(

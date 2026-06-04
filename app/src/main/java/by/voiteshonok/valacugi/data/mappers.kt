@@ -4,6 +4,7 @@ import by.voiteshonok.valacugi.data.room.ItineraryDayEntity
 import by.voiteshonok.valacugi.data.room.ItineraryStepEntity
 import by.voiteshonok.valacugi.data.room.MessageEntity
 import by.voiteshonok.valacugi.data.room.ThreadEntity
+import by.voiteshonok.valacugi.data.room.ThreadWithUnreadEntity
 import by.voiteshonok.valacugi.data.room.TripEntity
 import by.voiteshonok.valacugi.data.room.TripWithAssignedCountEntity
 import by.voiteshonok.valacugi.data.room.UserEntity
@@ -33,7 +34,7 @@ fun MessageEntity.toDomain(): Message {
     )
 }
 
-fun ThreadEntity.toDomain(): MessageThread {
+fun ThreadEntity.toDomain(hasUnread: Boolean = false): MessageThread {
     return MessageThread(
         id = threadId,
         tripId = tripId,
@@ -42,6 +43,10 @@ fun ThreadEntity.toDomain(): MessageThread {
         lastMessageAt = lastMessageAt,
         hasUnread = hasUnread
     )
+}
+
+fun ThreadWithUnreadEntity.toDomain(): MessageThread {
+    return thread.toDomain(hasUnread = hasUnread)
 }
 
 fun TripWithAssignedCountEntity.toDomain(): Trip {

@@ -23,7 +23,8 @@ class AppContainer(context: Context) {
     val threadsRepository: ThreadsRepository = RoomThreadsRepository(threadsDao = database.threadsDao())
     val messagesRepository: MessagesRepository = RoomMessagesRepository(
         messagesDao = database.messagesDao(),
-        threadsDao = database.threadsDao()
+        threadsDao = database.threadsDao(),
+        lastReadMessagesDao = database.lastReadMessagesDao()
     )
     val accessCredentialsValidator: AccessCredentialsValidator =
         AccessCredentialsValidator(usersRepository = usersRepository)

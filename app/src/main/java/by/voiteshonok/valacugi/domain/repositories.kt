@@ -18,6 +18,7 @@ interface ThreadsRepository {
 interface MessagesRepository {
     fun observeMessages(threadId: String): Flow<List<Message>>
     suspend fun sendMessage(threadId: String, senderId: String, body: String)
+    suspend fun markThreadAsRead(threadId: String, userId: String)
 }
 
 interface TripsRepository {

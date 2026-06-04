@@ -121,13 +121,27 @@ interface ThreadsDao {
 
     @Query(
         """
-        SELECT threads.* FROM threads
+        SELECT threads.*,
+        CASE WHEN EXISTS (
+            SELECT 1 FROM messages
+            WHERE messages.thread_id = threads.thread_id
+            AND messages.sent_at > COALESCE(
+                (
+                    SELECT last_read_messages.seen_at
+                    FROM last_read_messages
+                    WHERE last_read_messages.thread_id = threads.thread_id
+                    AND last_read_messages.user_id = :userId
+                ),
+                ''
+            )
+        ) THEN 1 ELSE 0 END AS has_unread
+        FROM threads
         INNER JOIN trip_assignments ON trip_assignments.trip_id = threads.trip_id
         WHERE trip_assignments.person_id = :userId
         ORDER BY threads.last_message_at DESC
         """
     )
-    fun observeThreadsForUser(userId: String): Flow<List<ThreadEntity>>
+    fun observeThreadsForUser(userId: String): Flow<List<ThreadWithUnreadEntity>>
 
     @Query("SELECT * FROM threads WHERE thread_id = :threadId LIMIT 1")
     fun observeThread(threadId: String): Flow<ThreadEntity?>
@@ -142,17 +156,36 @@ interface ThreadsDao {
         """
         UPDATE threads
         SET last_message_preview = :preview,
-            last_message_at = :sentAt,
-            has_unread = :hasUnread
+            last_message_at = :sentAt
         WHERE thread_id = :threadId
         """
     )
     suspend fun updateLastMessage(
         threadId: String,
         preview: String,
-        sentAt: String,
-        hasUnread: Boolean
+        sentAt: String
     )
+}
+
+@Dao
+interface LastReadMessagesDao {
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsert(lastRead: LastReadMessageEntity)
+
+    @Query("SELECT COUNT(*) FROM last_read_messages WHERE thread_id = :threadId")
+    suspend fun getLastReadCountForThread(threadId: String): Int
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(lastReadMessages: List<LastReadMessageEntity>)
+
+    @Query(
+        """
+        SELECT * FROM last_read_messages
+        WHERE thread_id = :threadId AND user_id = :userId
+        LIMIT 1
+        """
+    )
+    suspend fun getLastReadForUser(threadId: String, userId: String): LastReadMessageEntity?
 }
 
 @Dao
@@ -168,5 +201,15 @@ interface MessagesDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMessage(message: MessageEntity)
+
+    @Query(
+        """
+        SELECT * FROM messages
+        WHERE thread_id = :threadId
+        ORDER BY sent_at DESC
+        LIMIT 1
+        """
+    )
+    suspend fun getLatestMessageForThread(threadId: String): MessageEntity?
 }
 

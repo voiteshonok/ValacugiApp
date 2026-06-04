@@ -1,6 +1,8 @@
 package by.voiteshonok.valacugi.data.repositories
 
 import by.voiteshonok.valacugi.data.toDomain
+import by.voiteshonok.valacugi.data.room.LastReadMessageEntity
+import by.voiteshonok.valacugi.data.room.LastReadMessagesDao
 import by.voiteshonok.valacugi.data.room.MessageEntity
 import by.voiteshonok.valacugi.data.room.MessagesDao
 import by.voiteshonok.valacugi.data.room.ThreadsDao
@@ -45,7 +47,8 @@ class RoomUsersRepository(
 
 class RoomMessagesRepository(
     private val messagesDao: MessagesDao,
-    private val threadsDao: ThreadsDao
+    private val threadsDao: ThreadsDao,
+    private val lastReadMessagesDao: LastReadMessagesDao
 ) : MessagesRepository {
     override fun observeMessages(threadId: String): Flow<List<Message>> {
         return messagesDao.observeMessages(threadId = threadId).map { entities ->
@@ -70,9 +73,19 @@ class RoomMessagesRepository(
         threadsDao.updateLastMessage(
             threadId = threadId,
             preview = truncateMessagePreview(body = trimmedBody),
-            sentAt = sentAt,
-            hasUnread = false
+            sentAt = sentAt
         )
+    }
+
+    override suspend fun markThreadAsRead(threadId: String, userId: String) {
+        val latestMessage: MessageEntity = messagesDao.getLatestMessageForThread(threadId = threadId) ?: return
+        val lastReadMessage: LastReadMessageEntity = LastReadMessageEntity(
+            threadId = threadId,
+            userId = userId,
+            messageId = latestMessage.messageId,
+            seenAt = latestMessage.sentAt
+        )
+        lastReadMessagesDao.upsert(lastRead = lastReadMessage)
     }
 }
 
@@ -84,7 +97,9 @@ class RoomThreadsRepository(
     }
 
     override fun observeThreadsForUser(userId: String): Flow<List<MessageThread>> {
-        return threadsDao.observeThreadsForUser(userId = userId).map { entities -> entities.map { it.toDomain() } }
+        return threadsDao.observeThreadsForUser(userId = userId).map { entities ->
+            entities.map { entity -> entity.toDomain() }
+        }
     }
 
     override fun observeThread(threadId: String): Flow<MessageThread?> {

@@ -9,7 +9,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,6 +28,8 @@ import by.voiteshonok.valacugi.ui.theme.AtlasSurfaceContainerHigh
 
 private const val ChatRowHeightDp: Int = 72
 private const val ChatRowBorderWidthDp: Int = 1
+private const val UnreadIndicatorWidthDp: Int = 16
+private const val UnreadIndicatorHeightDp: Int = 8
 
 @Composable
 fun DirectoryChatRow(
@@ -96,7 +98,8 @@ fun DirectoryChatRow(
                 Box(
                     modifier = Modifier
                         .padding(top = 4.dp)
-                        .size(8.dp)
+                        .width(UnreadIndicatorWidthDp.dp)
+                        .height(UnreadIndicatorHeightDp.dp)
                         .background(
                             color = if (thread.hasUnread) AtlasSafetyOrange else AtlasSurfaceContainerHigh
                         )

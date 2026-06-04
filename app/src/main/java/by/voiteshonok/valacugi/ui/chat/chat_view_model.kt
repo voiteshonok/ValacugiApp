@@ -67,6 +67,12 @@ class ChatViewModel(
                 _uiState.update { previousState ->
                     nextState.copy(isSendingMessage = previousState.isSendingMessage)
                 }
+                val currentUserId: String? = nextState.currentUserId
+                if (!currentUserId.isNullOrBlank() && nextState.messages.isNotEmpty()) {
+                    launch {
+                        messagesRepository.markThreadAsRead(threadId = threadId, userId = currentUserId)
+                    }
+                }
             }
         }
     }

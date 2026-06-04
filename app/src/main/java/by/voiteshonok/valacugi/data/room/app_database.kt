@@ -18,9 +18,10 @@ private const val DatabaseName: String = "valacugi.db"
         ItineraryDayEntity::class,
         ItineraryStepEntity::class,
         ThreadEntity::class,
-        MessageEntity::class
+        MessageEntity::class,
+        LastReadMessageEntity::class
     ],
-    version = 10,
+    version = 11,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -28,6 +29,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun tripsDao(): TripsDao
     abstract fun threadsDao(): ThreadsDao
     abstract fun messagesDao(): MessagesDao
+    abstract fun lastReadMessagesDao(): LastReadMessagesDao
 
     companion object {
         fun create(context: Context): AppDatabase {
@@ -62,6 +64,15 @@ private object ValacugiSeeder {
         )
         ensureThreadsSeeded(database = database)
         ensureHanoiMessagesSeeded(database = database)
+        ensureHanoiLastReadSeeded(database = database)
+    }
+
+    private suspend fun ensureHanoiLastReadSeeded(database: AppDatabase) {
+        val lastReadCount: Int = database.lastReadMessagesDao().getLastReadCountForThread(threadId = HanoiThreadId)
+        if (lastReadCount > 0) {
+            return
+        }
+        database.lastReadMessagesDao().insertAll(lastReadMessages = buildHanoiLastReadMessages())
     }
 
     private suspend fun ensureHanoiMessagesSeeded(database: AppDatabase) {
@@ -262,6 +273,7 @@ private object ValacugiSeeder {
         database.tripsDao().insertSteps(itinerarySteps)
         database.threadsDao().insertAll(threads = buildThreadsForTrips(trips = trips))
         database.messagesDao().insertAll(messages = buildHanoiThreadMessages())
+        database.lastReadMessagesDao().insertAll(lastReadMessages = buildHanoiLastReadMessages())
     }
 }
 
