@@ -1,6 +1,7 @@
 package by.voiteshonok.valacugi.core.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -19,7 +20,10 @@ import by.voiteshonok.valacugi.ui.boot.BootScreen
 import by.voiteshonok.valacugi.ui.chat.ChatScreen
 import by.voiteshonok.valacugi.ui.chat.ChatViewModelFactory
 import by.voiteshonok.valacugi.ui.shell.ShellScreen
+import by.voiteshonok.valacugi.core.trip_creation.TripCreationDraftStore
 import by.voiteshonok.valacugi.ui.trips.TripConstructorScreen
+import by.voiteshonok.valacugi.ui.trips.TripConstructorViewModelFactory
+import by.voiteshonok.valacugi.ui.trips.TripInitializationScreen
 
 @Composable
 fun AppNavHost(
@@ -101,8 +105,44 @@ fun AppNavHost(
                 )
             )
         }
+        composable(route = AppRoutes.TripInitialization) {
+            TripInitializationScreen(
+                onNavigateBack = { navController.popBackStack() },
+                onInitializeTrip = { draft ->
+                    TripCreationDraftStore.saveDraft(draft = draft)
+                    navController.navigate(AppRoutes.TripConstructor) {
+                        launchSingleTop = true
+                    }
+                }
+            )
+        }
         composable(route = AppRoutes.TripConstructor) {
-            TripConstructorScreen()
+            val draft = TripCreationDraftStore.currentDraft
+            if (draft == null) {
+                LaunchedEffect(Unit) {
+                    navController.popBackStack(
+                        route = AppRoutes.Shell,
+                        inclusive = false
+                    )
+                }
+            } else {
+                TripConstructorScreen(
+                    draft = draft,
+                    onNavigateBack = { navController.popBackStack() },
+                    onFinished = {
+                        navController.popBackStack(
+                            route = AppRoutes.TripInitialization,
+                            inclusive = true
+                        )
+                        TripCreationDraftStore.clearDraft()
+                    },
+                    viewModelFactory = TripConstructorViewModelFactory(
+                        draft = draft,
+                        tripsRepository = appContainer.tripsRepository,
+                        sessionRepository = appContainer.sessionRepository
+                    )
+                )
+            }
         }
         composable(
             route = AppRoutes.Chat,

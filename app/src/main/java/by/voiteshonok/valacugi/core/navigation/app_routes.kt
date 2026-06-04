@@ -10,6 +10,7 @@ object AppRoutes {
     const val Atlas: String = "atlas/{tripId}"
     const val Transmission: String = "transmission/{threadId}"
     const val Chat: String = "chat/{threadId}"
+    const val TripInitialization: String = "trip_initialization"
     const val TripConstructor: String = "trip_constructor"
 }
 

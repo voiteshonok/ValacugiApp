@@ -143,7 +143,7 @@ fun ShellScreen(
                             rootNavController.navigate("atlas/$tripId")
                         },
                         onOpenTripConstructor = {
-                            rootNavController.navigate(AppRoutes.TripConstructor)
+                            rootNavController.navigate(AppRoutes.TripInitialization)
                         },
                         viewModelFactory = TripsViewModelFactory(tripsRepository = tripsRepository)
                     )

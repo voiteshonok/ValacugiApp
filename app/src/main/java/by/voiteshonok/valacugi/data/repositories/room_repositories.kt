@@ -1,5 +1,9 @@
 package by.voiteshonok.valacugi.data.repositories
 
+import by.voiteshonok.valacugi.core.trip_creation.TripCreationDraft
+import by.voiteshonok.valacugi.core.trip_creation.TripStepDraft
+import by.voiteshonok.valacugi.data.PersistedTripBundle
+import by.voiteshonok.valacugi.data.mapDraftToPersistedTripBundle
 import by.voiteshonok.valacugi.data.toDomain
 import by.voiteshonok.valacugi.data.room.LastReadMessageEntity
 import by.voiteshonok.valacugi.data.room.LastReadMessagesDao
@@ -109,7 +113,8 @@ class RoomThreadsRepository(
 }
 
 class RoomTripsRepository(
-    private val tripsDao: TripsDao
+    private val tripsDao: TripsDao,
+    private val threadsDao: ThreadsDao
 ) : TripsRepository {
     override fun observeTrips(): Flow<List<Trip>> {
         return combine(
@@ -162,6 +167,25 @@ class RoomTripsRepository(
 
     override suspend fun unassignUserFromTrip(tripId: String, userId: String) {
         tripsDao.deleteAssignment(tripId = tripId, userId = userId)
+    }
+
+    override suspend fun createTripFromDraft(
+        draft: TripCreationDraft,
+        steps: List<TripStepDraft>,
+        createdByUserId: String
+    ) {
+        val bundle: PersistedTripBundle = mapDraftToPersistedTripBundle(
+            draft = draft,
+            steps = steps,
+            createdByUserId = createdByUserId
+        )
+        tripsDao.insertTrips(trips = listOf(bundle.trip))
+        tripsDao.insertDays(days = listOf(bundle.day))
+        if (bundle.steps.isNotEmpty()) {
+            tripsDao.insertSteps(steps = bundle.steps)
+        }
+        tripsDao.insertAssignments(assignments = bundle.assignments)
+        threadsDao.insertAll(threads = listOf(bundle.thread))
     }
 }
 

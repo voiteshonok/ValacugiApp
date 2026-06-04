@@ -19,7 +19,10 @@ class AppContainer(context: Context) {
     val sessionRepository: SessionRepository = DataStoreSessionRepository(context = context)
     val database: AppDatabase = AppDatabase.create(context = context)
     val usersRepository: UsersRepository = RoomUsersRepository(usersDao = database.usersDao())
-    val tripsRepository: TripsRepository = RoomTripsRepository(tripsDao = database.tripsDao())
+    val tripsRepository: TripsRepository = RoomTripsRepository(
+        tripsDao = database.tripsDao(),
+        threadsDao = database.threadsDao()
+    )
     val threadsRepository: ThreadsRepository = RoomThreadsRepository(threadsDao = database.threadsDao())
     val messagesRepository: MessagesRepository = RoomMessagesRepository(
         messagesDao = database.messagesDao(),

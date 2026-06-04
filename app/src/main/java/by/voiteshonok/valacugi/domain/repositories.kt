@@ -1,5 +1,7 @@
 package by.voiteshonok.valacugi.domain
 
+import by.voiteshonok.valacugi.core.trip_creation.TripCreationDraft
+import by.voiteshonok.valacugi.core.trip_creation.TripStepDraft
 import kotlinx.coroutines.flow.Flow
 
 interface UsersRepository {
@@ -27,5 +29,10 @@ interface TripsRepository {
     fun observeIsUserAssignedToTrip(tripId: String, userId: String): Flow<Boolean>
     suspend fun assignUserToTrip(tripId: String, userId: String)
     suspend fun unassignUserFromTrip(tripId: String, userId: String)
+    suspend fun createTripFromDraft(
+        draft: TripCreationDraft,
+        steps: List<TripStepDraft>,
+        createdByUserId: String
+    )
 }
 
