@@ -87,14 +87,10 @@ class LastReadUnreadDaoTest {
             lastReadMessagesDao = database.lastReadMessagesDao()
         )
         messagesRepository.markThreadAsRead(threadId = HanoiThreadId, userId = RegularUserId)
-        database.messagesDao().insertMessage(
-            message = MessageEntity(
-                messageId = "message_hanoi_06",
-                threadId = HanoiThreadId,
-                senderId = AdminUserId,
-                body = "Weather shift — confirm meet time.",
-                sentAt = "2026-07-14T19:10:00"
-            )
+        messagesRepository.sendMessage(
+            threadId = HanoiThreadId,
+            senderId = RegularUserId,
+            body = "Weather shift — confirm meet time."
         )
         val threadsRepository = RoomThreadsRepository(threadsDao = database.threadsDao())
         val hanoiThread = threadsRepository.observeThreadsForUser(userId = RegularUserId).first()

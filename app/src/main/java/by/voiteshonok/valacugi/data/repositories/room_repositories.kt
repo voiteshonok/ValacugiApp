@@ -7,7 +7,7 @@ import by.voiteshonok.valacugi.data.room.MessageEntity
 import by.voiteshonok.valacugi.data.room.MessagesDao
 import by.voiteshonok.valacugi.data.room.ThreadsDao
 import by.voiteshonok.valacugi.data.room.createMessageId
-import by.voiteshonok.valacugi.data.room.createSentAtIsoTimestamp
+import by.voiteshonok.valacugi.data.room.resolveSentAtForNewMessage
 import by.voiteshonok.valacugi.data.room.truncateMessagePreview
 import by.voiteshonok.valacugi.data.room.TripAssignmentEntity
 import by.voiteshonok.valacugi.data.room.TripEntity
@@ -61,7 +61,8 @@ class RoomMessagesRepository(
         if (trimmedBody.isEmpty()) {
             return
         }
-        val sentAt: String = createSentAtIsoTimestamp()
+        val latestSentAt: String? = messagesDao.getLatestMessageForThread(threadId = threadId)?.sentAt
+        val sentAt: String = resolveSentAtForNewMessage(latestSentAtInThread = latestSentAt)
         val messageEntity: MessageEntity = MessageEntity(
             messageId = createMessageId(threadId = threadId),
             threadId = threadId,
